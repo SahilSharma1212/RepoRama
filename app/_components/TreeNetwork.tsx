@@ -4,8 +4,9 @@ import { useEffect, useRef } from "react";
 import { Network, Data, Node, Edge, Options } from "vis-network/standalone";
 import type { TreeNode } from "../types";
 import { getFolderColor } from "@/app/_utils/folderColors";
-import { fileColors } from "../_utils/fileColors";
+import { fileColors } from "../_utils/treeAndNodeUtils/fileColors";
 import { useDataStore } from "@/app/store/dataStore";
+import { filterTree } from "@/app/_utils/treeAndNodeUtils/filterTree";
 
 interface VisGraphProps {
     treeData: TreeNode[];
@@ -13,16 +14,19 @@ interface VisGraphProps {
 
 export default function VisGraph({ treeData }: VisGraphProps) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { setSelectedNode } = useDataStore(); // <-- add store actions
+    const { setSelectedNode, hiddenNodes } = useDataStore();
 
     useEffect(() => {
         if (!containerRef.current) return;
+
+        // Filter out hidden nodes
+        const filteredTreeData = filterTree(treeData, hiddenNodes);
 
         const nodes: Node[] = [];
         const edges: Edge[] = [];
 
         let idCounter = 0;
-        const idToNodeMap: Record<number, TreeNode> = {}; // map to get TreeNode from Vis node ID
+        const idToNodeMap: Record<number, TreeNode> = {};
 
         const traverse = (node: TreeNode, parentId: number | null = null, depth: number = 0) => {
             const nodeId = idCounter++;
@@ -59,7 +63,7 @@ export default function VisGraph({ treeData }: VisGraphProps) {
                 font: { color: "#fff", size: fontSize },
             });
 
-            idToNodeMap[nodeId] = node; // map Vis node ID to TreeNode
+            idToNodeMap[nodeId] = node;
 
             if (parentId !== null) {
                 edges.push({ from: parentId, to: nodeId });
@@ -68,7 +72,7 @@ export default function VisGraph({ treeData }: VisGraphProps) {
             node.children?.forEach(child => traverse(child, nodeId, depth + 1));
         };
 
-        treeData.forEach(node => traverse(node));
+        filteredTreeData.forEach(node => traverse(node));
 
         const data: Data = { nodes, edges };
 
@@ -95,12 +99,12 @@ export default function VisGraph({ treeData }: VisGraphProps) {
                 const nodeId = params.nodes[0];
                 const nodeData = idToNodeMap[nodeId];
                 if (nodeData) {
-                    setSelectedNode(nodeData); // update store
+                    setSelectedNode(nodeData);
                 }
             }
         });
 
-    }, [treeData, setSelectedNode]);
+    }, [treeData, hiddenNodes, setSelectedNode]);
 
     return (
         <div

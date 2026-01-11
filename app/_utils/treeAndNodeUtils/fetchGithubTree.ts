@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import type { GitHubTreeResponse, GitHubTreeItem } from "../types";
+import type { GitHubTreeResponse, GitHubTreeItem } from "../../types";
 
 /**
  * Fetch GitHub repository tree as a flat array

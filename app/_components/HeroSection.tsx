@@ -23,22 +23,27 @@ export default function HeroSection() {
 
             {/* hero visualization mock */}
             <section className="relative z-10 mt-24 flex justify-center flex-col items-center">
-                <div className="relative w-[85%] max-w-6xl h-105 rounded-2xl border border-gray-700 bg-white/1 backdrop-blur-3xl shadow-[0_0_80px_rgba(255,255,255,0.03)]">
-                </div>
+                <div className="relative w-[85%] max-w-6xl h-105  border border-white/10 bg-white/1 backdrop-blur-3xl ">
 
-                <div className='grid grid-cols-2 gap-10'>
+                    <div className='flex'>
+                        <div className='w-50 h-50 border border-b-white/10 border-r-white/10 border-l-white/0 border-t-white/0'>
 
-                    <div className="relative w-[85%] max-w-6xl h-105 rounded-2xl border border-gray-700 bg-white/1 backdrop-blur-3xl shadow-[0_0_80px_rgba(255,255,255,0.03)]">
-
+                        </div>
+                        
                     </div>
 
-                    <div className="relative w-[85%] max-w-6xl h-105 rounded-2xl border border-gray-700 bg-white/1 backdrop-blur-3xl shadow-[0_0_80px_rgba(255,255,255,0.03)]">
+                    <div className='flex'>
+                        <div className='w-50 h-50 border border-b-white/10 border-r-white/10 border-l-white/0 border-t-white/0'>
 
+                        </div>
+                        <div className='w-50 h-50 border border-white/10 border-l-white/0'>
+
+                        </div>
+                        
                     </div>
-
                 </div>
             </section>
-            
+
             {/* bottom labels */}
             <div className="bottom-6 left-6 text-sm text-gray-500 text-center">
                 Graphs • Schemas • API Routes • Architecture

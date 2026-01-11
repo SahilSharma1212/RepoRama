@@ -1,7 +1,32 @@
 import { create } from "zustand";
 import type { GitHubTreeItem, TreeNode } from "../types";
-import { fetchGitHubTree } from "../_utils/fetchGithubTree";
+import { fetchGitHubTree } from "../_utils/treeAndNodeUtils/fetchGithubTree";
 import { structureGitHubTree } from "../_utils/structureGithubTree";
+
+interface Owner {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+}
+
+interface RepoStats {
+    id: number;
+    name: string;
+    full_name: string;
+    description: string | null;
+    owner: Owner;
+    html_url: string;
+    language: string;
+    stargazers_count: number;
+    forks_count: number;
+    watchers_count: number;
+    open_issues_count: number;
+    size: number;
+    created_at: string;
+    updated_at: string;
+    pushed_at: string;
+    default_branch: string;
+}
 
 interface DataStore {
     flatTree: GitHubTreeItem[] | null;
@@ -15,6 +40,12 @@ interface DataStore {
     performSearch: (val: string) => void;
     selectedNode: TreeNode | null;
     setSelectedNode: (val: TreeNode) => void;
+
+    hiddenNodes: Set<string>; // using node name or id
+    toggleNodeVisibility: (nodeId: string) => void;
+
+    repoStats: RepoStats | null;
+    setRepoStats: (data: RepoStats) => void;
 }
 
 export const useDataStore = create<DataStore>((set, get) => ({
@@ -64,4 +95,14 @@ export const useDataStore = create<DataStore>((set, get) => ({
             set({ selectedNode: val });
         }
     },
+
+    hiddenNodes: new Set(),
+    toggleNodeVisibility: (nodeId: string) => {
+        const hiddenNodes = new Set(get().hiddenNodes);
+        if (hiddenNodes.has(nodeId)) hiddenNodes.delete(nodeId);
+        else hiddenNodes.add(nodeId);
+        set({ hiddenNodes });
+    },
+    repoStats: null,
+    setRepoStats: (data) => set({ repoStats: data }),
 }));

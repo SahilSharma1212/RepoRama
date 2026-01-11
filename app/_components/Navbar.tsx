@@ -17,12 +17,25 @@ export default function Navbar() {
                 REPORAMA
             </div>
 
-            <div className='bg-linear-to-br from-white  to-gray-500 bg-clip-text text-transparent font-bold text-3xl flex-items'>
-                REPORAMA
+            <div className='bg-linear-to-br from-white  to-gray-500 bg-clip-text text-transparent font-bold text-lg flex-row gap-4 flex justify-center items-center'>
+                <div>
+                    Home
+                </div>
+                <div>
+                    About
+                </div>
+                <div>
+                    Contact
+                </div>
             </div>
 
-            <div className='bg-linear-to-br from-white  to-gray-500 bg-clip-text text-transparent font-bold text-3xl'>
-                REPORAMA
+            <div className='bg-linear-to-br from-white  to-gray-500 bg-clip-text text-transparent font-bold text-lg gap-4 flex justify-end items-center'>
+                <div>
+                    Login
+                </div>
+                <div>
+                    Register
+                </div>
             </div>
         </nav>
     )

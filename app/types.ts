@@ -51,3 +51,18 @@ export interface TreeNode {
     url: string;
     children: TreeNode[];
 }
+
+export interface GitHubBranch {
+    name: string;
+    protected: boolean;
+    commit: {
+        sha: string;
+        url: string;
+    };
+}
+
+export interface BranchStats {
+    name: string;
+    sha: string;
+    protected: boolean;
+}

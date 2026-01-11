@@ -4,9 +4,10 @@ import { File, Folder, Search } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useDataStore } from '@/app/store/dataStore';
 import type { GitHubTreeItem, TreeNode } from '@/app/types';
+import { findTreeNodeByPath } from '@/app/_utils/treeAndNodeUtils/findNodeByTreePath';
 
 export default function TopBar() {
-    const { performSearch, setSearchVal, searchResults, setSelectedNode } = useDataStore();
+    const { performSearch, setSearchVal, searchResults, setSelectedNode, treeData } = useDataStore();
     const searchTimeRef = useRef<number | null>(null);
 
     const [inputVal, setInputVal] = useState<string>('');
@@ -25,18 +26,27 @@ export default function TopBar() {
     };
 
     const handleSelectNode = (item: GitHubTreeItem) => {
-        // Convert GitHubTreeItem → TreeNode safely
-        const node: TreeNode = {
-            name: item.path.split('/').pop() || item.path,
-            type: item.type === 'tree' ? 'dir' : 'file',
-            path: item.path,
-            url: item.url,
-            children: [], // child nodes will be filled when needed
-        };
+        // Try to find the actual TreeNode from treeData
+        let node: TreeNode | null = null;
+        
+        if (treeData) {
+            node = findTreeNodeByPath(treeData, item.path);
+        }
+        
+        // Fallback: if not found, create a new TreeNode (for files, this is fine)
+        if (!node) {
+            node = {
+                name: item.path.split('/').pop() || item.path,
+                type: item.type === 'tree' ? 'dir' : 'file',
+                path: item.path,
+                url: item.url,
+                children: [],
+            };
+        }
 
         setSelectedNode(node);
         setShowDropdown(false);
-        setInputVal(''); // optional: clear input
+        setInputVal('');
     };
 
     return (

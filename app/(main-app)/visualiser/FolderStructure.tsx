@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import type { TreeNode } from "../../types";
-import { Folder, FolderClosed, File } from "lucide-react";
-import { fileColors } from "@/app/_utils/fileColors";
+import { Folder, FolderClosed, File, Eye, EyeOff } from "lucide-react";
+import { fileColors } from "@/app/_utils/treeAndNodeUtils/fileColors";
 import { getFolderColor } from "@/app/_utils/folderColors";
 import { useDataStore } from "@/app/store/dataStore";
+
 interface FolderTreeProps {
   treeData: TreeNode[];
   level?: number;
@@ -42,7 +43,9 @@ const TreeNodeItem: React.FC<{ node: TreeNode; level: number }> = ({ node, level
   const folderColor = isDir ? getFolderColor(normalizedName) : null
   const fileExt = !isDir ? getFileExtension(node.name) : null
   const fileColor = fileExt ? fileColors[fileExt] : null
-  const { setSelectedNode } = useDataStore();
+  const { setSelectedNode, hiddenNodes, toggleNodeVisibility } = useDataStore();
+  const isHidden = hiddenNodes.has(node.path);
+  
   return (
     <li className="flex flex-col text-gray-300">
       <div
@@ -81,8 +84,24 @@ const TreeNodeItem: React.FC<{ node: TreeNode; level: number }> = ({ node, level
           />
         )}
 
-
         {node.name}
+        
+        {isDir && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleNodeVisibility(node.path);
+            }}
+            className="ml-auto mr-2 p-1 hover:bg-[#333] rounded transition"
+            title={isHidden ? "Show folder in network" : "Hide folder from network"}
+          >
+            {isHidden ? (
+              <EyeOff className="w-4 h-4 text-gray-500" />
+            ) : (
+              <Eye className="w-4 h-4 text-gray-400" />
+            )}
+          </button>
+        )}
       </div>
 
       {isDir && expanded && node.children.length > 0 && (

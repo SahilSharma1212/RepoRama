@@ -1,4 +1,4 @@
-import { NodeColor } from "../types";
+import { NodeColor } from "../../types";
 
 export const fileColors: Record<string, NodeColor> = {
     // JAVASCRIPT / TYPESCRIPT
