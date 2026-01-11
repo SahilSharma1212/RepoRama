@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { Network, Data, Node, Edge, Options } from "vis-network/standalone";
-import type { TreeNode } from "@/utils/structureGithubTree";
-import { getFolderColor } from "@/utils/folderColors"; // folder colors
-import { fileColors } from "../../utils/fileColors"; // file colors
+import type { TreeNode } from "../types";
+import { getFolderColor } from "@/app/_utils/folderColors";
+import { fileColors } from "../_utils/fileColors";
+import { useDataStore } from "@/app/store/dataStore";
 
 interface VisGraphProps {
     treeData: TreeNode[];
@@ -12,6 +13,7 @@ interface VisGraphProps {
 
 export default function VisGraph({ treeData }: VisGraphProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { setSelectedNode } = useDataStore(); // <-- add store actions
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -20,10 +22,8 @@ export default function VisGraph({ treeData }: VisGraphProps) {
         const edges: Edge[] = [];
 
         let idCounter = 0;
+        const idToNodeMap: Record<number, TreeNode> = {}; // map to get TreeNode from Vis node ID
 
-
-
-        // Recursive function to convert TreeNode to Vis nodes & edges
         const traverse = (node: TreeNode, parentId: number | null = null, depth: number = 0) => {
             const nodeId = idCounter++;
 
@@ -32,10 +32,9 @@ export default function VisGraph({ treeData }: VisGraphProps) {
                 ? fileColors[node.name.split('.').pop() || 'default'] || { background: '#555', border: '#333' }
                 : getFolderColor(node.name);
 
-            // Node size based on depth
             const baseFontSize = 10;
             const basePadding = 7;
-            const depthMultiplier = depth === 0 ? 2 : 1.4; // top-level nodes are bigger
+            const depthMultiplier = depth === 0 ? 2 : 1.4;
             const fontSize = baseFontSize * depthMultiplier;
             const marginSize = basePadding * depthMultiplier;
 
@@ -57,76 +56,63 @@ export default function VisGraph({ treeData }: VisGraphProps) {
                         border: color.border,
                     }
                 },
-
-                font: {
-                    color: "#ffffff",
-                    size: fontSize,
-                },
+                font: { color: "#fff", size: fontSize },
             });
+
+            idToNodeMap[nodeId] = node; // map Vis node ID to TreeNode
 
             if (parentId !== null) {
                 edges.push({ from: parentId, to: nodeId });
             }
 
-            node.children?.forEach((child) => traverse(child, nodeId, depth + 1));
+            node.children?.forEach(child => traverse(child, nodeId, depth + 1));
         };
 
+        treeData.forEach(node => traverse(node));
 
-        treeData.forEach((node) => traverse(node));
-
-        const data: Data = {
-            nodes,
-            edges,
-        };
+        const data: Data = { nodes, edges };
 
         const options: Options = {
-            layout: {
-                hierarchical: false,
-            },
-            nodes: {
-                font: { size: 16, color: '#fff' },
-                borderWidth: 2,
-            },
+            layout: { hierarchical: false },
+            nodes: { font: { size: 16, color: '#fff' }, borderWidth: 2 },
             edges: {
                 arrows: "to",
-                smooth: {
-                    enabled: true,
-                    type: "dynamic",
-                    roundness: 0.5,
-                },
+                smooth: { enabled: true, type: "dynamic", roundness: 0.5 },
             },
             physics: {
                 enabled: true,
                 stabilization: false,
-                barnesHut: {
-                    gravitationalConstant: -2000,
-                    springLength: 150,
-                    springConstant: 0.01,
-                },
+                barnesHut: { gravitationalConstant: -2000, springLength: 150, springConstant: 0.01 },
             },
-            interaction: {
-                dragNodes: true,
-                dragView: true,
-                zoomView: true,
-            },
+            interaction: { dragNodes: true, dragView: true, zoomView: true },
         };
 
-        new Network(containerRef.current, data, options);
-    }, [treeData]);
+        const network = new Network(containerRef.current, data, options);
+
+        // ---- Node click handler ----
+        network.on("click", (params) => {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const nodeData = idToNodeMap[nodeId];
+                if (nodeData) {
+                    setSelectedNode(nodeData); // update store
+                }
+            }
+        });
+
+    }, [treeData, setSelectedNode]);
 
     return (
         <div
             ref={containerRef}
             style={{
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: "#111", // base color
-                backgroundImage:
-                    "radial-gradient(#333 1px, transparent 1px)", // dot color & size
-                backgroundSize: "20px 20px", // spacing between dots
-                cursor:"pointer"
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#111",
+                backgroundImage: "radial-gradient(#333 1px, transparent 1px)",
+                backgroundSize: "20px 20px",
+                cursor: "pointer"
             }}
-
         />
     );
 }

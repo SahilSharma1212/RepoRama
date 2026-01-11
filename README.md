@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Types Used
 
-## Getting Started
+## GitHubTreeItem
+Represents a single item (file or folder) returned by the GitHub API.  
+Includes information like the path, type (`blob` for file, `tree` for folder), SHA, URL, and size (for files).
 
-First, run the development server:
+## GitHubTreeResponse
+Represents the full response from GitHub when fetching a repository tree.  
+Contains the SHA of the tree, the API URL, an array of `GitHubTreeItem`s, and a flag indicating if the tree was truncated.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## TreeNode
+Represents a node in the nested tree structure used in the app after converting the flat GitHub tree.  
+Includes the name, type (`file` or `dir`), path, URL, and an array of child `TreeNode`s.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Zustand Store
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## useDataStore
+`useDataStore` is a state management store for handling GitHub repository trees.  
+It provides both **flat** and **nested tree representations** of the repository and manages loading and error states.
 
-## Learn More
+### Store State
 
-To learn more about Next.js, take a look at the following resources:
+- `flatTree: GitHubTreeItem[] | null`  
+  Flat array of GitHub files and directories.  
+  Useful for searching, filtering, or analytics.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `treeData: TreeNode[] | null`  
+  Nested tree structure used for UI rendering in components like graphs or file explorers.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `loading: boolean`  
+  Indicates whether the GitHub tree is currently being fetched.
 
-## Deploy on Vercel
+- `error: string | null`  
+  Stores any error message encountered during the fetch.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Store Functions / Actions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `fetchTree: () => Promise<void>`  
+  - Fetches the repository tree from GitHub using `fetchGitHubTree()`.  
+  - Converts the flat tree into a nested tree using `structureGitHubTree()`.  
+  - Updates `flatTree` and `treeData` in the store.  
+  - Manages `loading` and `error` states automatically.
+
+---
+
+### Utility Functions Used
+
+- `fetchGitHubTree()`  
+  - Fetches the GitHub repository tree via the GitHub API.  
+  - Returns a flat array of `GitHubTreeItem[]`.
+
+- `structureGitHubTree(flatTree: GitHubTreeItem[]): TreeNode[]`  
+  - Converts a flat GitHub tree array into a nested `TreeNode[]` suitable for UI rendering.  
+  - Preserves folder/file hierarchy.

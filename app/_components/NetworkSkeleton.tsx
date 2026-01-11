@@ -1,57 +1,102 @@
-'use client'
+import { File, Folder, ListTree, X } from 'lucide-react'
+import React from 'react'
 
-import { useEffect, useRef } from "react";
-import './NetworkSkeleton.css';
-
-export default function NetworkSkeleton() {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const nodes = Array.from(containerRef.current?.querySelectorAll('.node') || []);
-        const edges = Array.from(containerRef.current?.querySelectorAll('.edge') || []);
-
-        // Animate edges
-        edges.forEach((edge, i) => {
-            const delay = Math.random() * 2;
-            edge.animate([
-                { opacity: 0.2 },
-                { opacity: 0.8 },
-                { opacity: 0.2 },
-            ], {
-                duration: 2000 + Math.random() * 1000,
-                iterations: Infinity,
-                delay: delay * 1000,
-            });
-        });
-
-        // Animate nodes (pulsing)
-        nodes.forEach((node, i) => {
-            const delay = Math.random() * 2;
-            node.animate([
-                { transform: 'scale(1)', opacity: 0.6 },
-                { transform: 'scale(1.3)', opacity: 1 },
-                { transform: 'scale(1)', opacity: 0.6 },
-            ], {
-                duration: 1500 + Math.random() * 1000,
-                iterations: Infinity,
-                delay: delay * 1000,
-            });
-        });
-    }, []);
-
+export function NetworkSkeleton() {
     return (
-        <div ref={containerRef} className="network-skeleton">
-            {/* edges */}
-            <div className="edge" style={{ top: '20%', left: '10%', width: '60%', transform: 'rotate(20deg)' }} />
-            <div className="edge" style={{ top: '50%', left: '30%', width: '50%', transform: 'rotate(-10deg)' }} />
-            <div className="edge" style={{ top: '70%', left: '20%', width: '40%', transform: 'rotate(30deg)' }} />
+        <div className='h-screen w-screen bg-[#111] flex items-center justify-between'>
 
-            {/* nodes */}
-            <div className="node" style={{ top: '20%', left: '10%' }} />
-            <div className="node" style={{ top: '50%', left: '30%' }} />
-            <div className="node" style={{ top: '70%', left: '20%' }} />
-            <div className="node" style={{ top: '40%', left: '70%' }} />
-            <div className="node" style={{ top: '60%', left: '50%' }} />
+            {/* 
+            DIrectory tree skeleton will go here */}
+            <div
+                style={{
+                    backgroundColor: '#151515',
+                    backgroundImage: 'radial-gradient(#333 1px, transparent 1px)',
+                }}
+                className="h-screen w-70 flex flex-col border-r border-white/10 max-md:hidden "
+            >
+                {/* Heading */}
+                <h1 className="flex items-center bg-[#151515] border-b border-white/10 text-gray-200 py-3 pl-5 text-md font-semibold gap-2">
+
+                    <ListTree strokeWidth={1.5} /> Directory Tree
+
+
+                </h1>
+
+                {/* Directory tree skeleton */}
+                <div className="flex-1 p-4 space-y-3">
+
+                    {
+                        [1, 2, 3, 4, 5].map((num, idx) => {
+
+                            return (
+                                <div className="flex items-center gap-2" key={idx}>
+
+                                    <div className="h-3 w-50 rounded bg-white/20 animate-pulse" />
+                                </div>
+                            )
+                        })
+                    }
+
+                    <div className="pl-9 space-y-2">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="flex items-center gap-2">
+
+                                <div className="h-3 w-38 rounded bg-white/10 animate-pulse" />
+                            </div>
+                        ))}
+                    </div>
+
+                    {
+                        [1, 2, 3, 4, 5].map((num, idx) => {
+
+                            return (
+                                <div className="flex items-center gap-2" key={idx}>
+
+                                    <div className="h-3 w-50 rounded bg-white/20 animate-pulse" />
+                                </div>
+                            )
+                        })
+                    }
+
+
+
+                </div>
+
+            </div>
+            {/* 
+middle part is left alone occupying the backgrounds dots */}
+
+            {/* 
+            left side for random skeletons */}
+            <div
+                className={`
+                w-110 h-screen flex flex-col border-l border-white/10
+                bg-[#222]/80 backdrop-blur-3xl
+                transition-all duration-300 ease-out
+                max-md:w-[90vw] max-md:h-[70vh] max-md:bottom-3 max-md:right-3
+                
+                    opacity-100 translate-y-0 scale-100 pointer-events-auto
+            `}
+            >
+
+                <div className="flex justify-between items-center px-4 py-3 border-b border-white/10 text-base max-md:px-3 max-md:py-2">
+                <h1 className="font-semibold text-gray-300 flex items-center text-sm max-md:text-base">
+                    
+                        <Folder className="text-gray-400 w-4 h-4 max-md:w-5 max-md:h-5" />
+                    
+                    <span className={ 'text-gray-600 ml-2 truncate max-w-30 sm:max-w-50'}>
+                        Select a File or Dir
+                    </span>
+                    <p className="text-gray-600 ml-2 text-xs font-normal max-md:text-sm truncate max-w-25 sm:max-w-37.5">
+                    </p>
+                </h1>
+                <button className="ml-2">
+                    <X className="text-gray-500 hover:text-gray-300 w-4 h-4 max-md:w-5 max-md:h-5 transition" />
+                </button>
+            </div>
+
+            </div>
+
         </div>
-    );
+    )
 }
