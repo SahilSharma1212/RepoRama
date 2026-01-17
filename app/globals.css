@@ -4,10 +4,6 @@ body {
     background-color: #111;
 }
 
-.bg-gray {
-    @apply bg-[#111];
-}
-
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
@@ -24,3 +20,4 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #3a3a3a;
 }
+

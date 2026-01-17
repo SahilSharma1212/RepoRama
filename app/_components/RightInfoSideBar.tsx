@@ -5,18 +5,19 @@ import axios from 'axios';
 import { useDataStore } from '@/app/store/dataStore';
 import { X, Folder, File, Wand2, Code, Plus, Ban } from 'lucide-react';
 import useUIStore from '../store/uiStore';
-
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { getLanguage } from '../_utils/getLanguage';
+import '../globals.css'
+import Notes from './Notes';
 export default function RightInfoSideBar() {
     const { selectedNode, setSelectedNode } = useDataStore();
-    const {isRightBarHidden, toggleRightBarVisibility}= useUIStore();
+    const { isRightBarHidden, toggleRightBarVisibility } = useUIStore();
     const [activeTab, setActiveTab] = useState<'code' | 'summary' | 'notes'>('code');
 
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [notesMap, setNotesMap] = useState<Record<string, string[]>>({});
-
-    const [noteDraft, setNoteDraft] = useState('');
 
 
     const fetchContent = async (url: string) => {
@@ -61,15 +62,7 @@ export default function RightInfoSideBar() {
     }, [selectedNode]);
 
 
-    useEffect(() => {
-        if (!selectedNode) {
-            setNoteDraft('');
-            return;
-        }
-        const notes = notesMap[selectedNode.path] || [];
-        setNoteDraft(notes.length > 0 ? notes[notes.length - 1] : '');
-    }, [selectedNode, notesMap]);
-
+    
 
     return (
         <div className={`
@@ -93,9 +86,13 @@ export default function RightInfoSideBar() {
                         {selectedNode ? '/' + selectedNode.path : ''}
                     </p>
                 </h1>
+                <div>
+
+                
                 <button className="ml-2" onClick={toggleRightBarVisibility}>
                     <X className="text-gray-500 hover:text-gray-300 w-4 h-4 max-md:w-5 max-md:h-5 transition" />
                 </button>
+                </div>
             </div>
 
             {/* Content */}
@@ -127,9 +124,20 @@ export default function RightInfoSideBar() {
                 {selectedNode && !loading && !error && (
                     <>
                         {activeTab === 'code' && selectedNode.type === 'file' && (
-                            <p className="text-gray-300 text-sm max-md:text-xs wrap-break-word">
-                                {content.length > 2000 ? content.slice(0, 2000) + '...' : content}
-                            </p>
+                            <div className="w-full">
+                                <SyntaxHighlighter
+                                    language={getLanguage(selectedNode.name)}
+                                    style={oneDark}
+                                    showLineNumbers
+                                    customStyle={{
+                                        width:"full",
+                                        scrollbarWidth: 'thin',
+                                        scrollbarColor: '#333333 #222222',
+                                    }}
+                                >
+                                    {content}
+                                </SyntaxHighlighter>
+                            </div>
                         )}
 
                         {activeTab === 'code' && selectedNode.type === 'dir' && (
@@ -143,7 +151,7 @@ export default function RightInfoSideBar() {
             w-full flex items-center gap-2 px-3 py-2 rounded
             text-left text-sm text-gray-300
             hover:bg-white/5 transition
-          "
+            "
                                         >
                                             {child.type === 'dir' ? (
                                                 <Folder className="w-4 h-4 text-blue-400 shrink-0" />
@@ -173,67 +181,7 @@ export default function RightInfoSideBar() {
                         )}
 
                         {activeTab === 'notes' && selectedNode && (
-                            <div className="flex flex-col gap-4 h-full">
-                                {/* Previous notes */}
-                                <div className="flex-1 overflow-y-auto p-3 bg-[#111]/50 rounded space-y-2 custom-scrollbar">
-                                    {(notesMap[selectedNode.path] ?? []).length > 0 ? (
-                                        (notesMap[selectedNode.path] ?? []).map((note: string, idx: number) => (
-                                            <div
-                                                key={idx}
-                                                className="p-3 bg-[#222] rounded text-gray-300 text-sm wrap-break-word"
-                                            >
-                                                {note}
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">No previous notes</p>
-                                    )}
-                                </div>
-
-                                {/* Add new note */}
-                                <div className="flex flex-col gap-2">
-                                    <textarea
-                                        value={noteDraft}
-                                        onChange={(e) => setNoteDraft(e.target.value)}
-                                        placeholder="Write a new note..."
-                                        className="
-                                        w-full min-h-20 max-h-60 resize-none
-                                        bg-[#0f0f0f] border border-white/10 rounded-md
-                                        p-3 text-sm text-gray-300
-                                        placeholder:text-gray-600
-                                        focus:outline-none focus:border-gray-700
-                                        overflow-y-auto custom-scrollbar
-                                        "
-                                        style={{ height: 'auto' }}
-                                        rows={3}
-                                        onInput={(e) => {
-                                            const target = e.target as HTMLTextAreaElement;
-                                            target.style.height = 'auto';
-                                            target.style.height = target.scrollHeight + 'px';
-                                        }}
-                                    />
-
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            if (!selectedNode || !noteDraft.trim()) return;
-
-                                            setNotesMap((prev) => {
-                                                const prevNotes = prev[selectedNode.path] ?? [];
-                                                return {
-                                                    ...prev,
-                                                    [selectedNode.path]: [...prevNotes, noteDraft.trim()],
-                                                };
-                                            });
-
-                                            setNoteDraft('');
-                                        }}
-                                        className="self-end px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded text-white text-sm transition"
-                                    >
-                                        Add Note
-                                    </button>
-                                </div>
-                            </div>
+                            <Notes selectedNode={selectedNode}/>
                         )}
 
                     </>
