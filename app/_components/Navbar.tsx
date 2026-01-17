@@ -3,12 +3,10 @@ import React from 'react'
 export default function Navbar() {
     return (
         <nav
-        className='bg-[#111] border-b border-b-gray-600 grid grid-cols-3 px-1
+            className='bg-[#111] border-b border-b-white/10 grid grid-cols-3 px-1
         py-4 sticky top-0 z-50
         text-white
         md:px-5
-
-
         lg:px-8
         
         '

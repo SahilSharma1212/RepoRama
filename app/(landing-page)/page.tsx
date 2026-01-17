@@ -4,10 +4,10 @@ import HeroSection from '../_components/HeroSection'
 export default function page() {
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className='lg:px-35 md:px-10'>
-        <HeroSection/>
+        <HeroSection />
       </div>
     </div>
   )
-}
+};

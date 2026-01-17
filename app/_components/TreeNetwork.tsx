@@ -115,7 +115,8 @@ export default function VisGraph({ treeData }: VisGraphProps) {
                 backgroundColor: "#111",
                 backgroundImage: "radial-gradient(#333 1px, transparent 1px)",
                 backgroundSize: "20px 20px",
-                cursor: "pointer"
+                cursor: "pointer",
+                zIndex:30
             }}
         />
     );

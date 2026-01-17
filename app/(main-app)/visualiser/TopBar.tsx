@@ -50,7 +50,7 @@ export default function TopBar() {
     };
 
     return (
-        <div className="absolute top-0 z-50 w-full flex flex-col items-center pt-4">
+        <div className="absolute top-0 z-40 w-full flex flex-col items-center pt-4">
             {/* Search box */}
             <div className="relative w-100 max-w-[90%] bg-white/15 px-4 py-2 backdrop-blur-3xl rounded-md flex items-center gap-3">
                 <input

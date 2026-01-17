@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDataStore } from '@/app/store/dataStore';
 import { X, Folder, File, Wand2, Code, Plus, Ban } from 'lucide-react';
+import useUIStore from '../store/uiStore';
 
 export default function RightInfoSideBar() {
     const { selectedNode, setSelectedNode } = useDataStore();
+    const {isRightBarHidden, toggleRightBarVisibility}= useUIStore();
     const [activeTab, setActiveTab] = useState<'code' | 'summary' | 'notes'>('code');
 
     const [content, setContent] = useState('');
@@ -70,16 +72,12 @@ export default function RightInfoSideBar() {
 
 
     return (
-        <div
-            className={`
-                w-110 h-screen flex flex-col border-l border-white/10
-                bg-[#222]/80 backdrop-blur-3xl
-                transition-all duration-300 ease-out
-                max-md:w-[90vw] max-md:h-[70vh] max-md:bottom-3 max-md:right-3
-                
-                    opacity-100 translate-y-0 scale-100 pointer-events-auto
-            `}
-        >
+        <div className={`
+    h-screen flex flex-col border-l border-white/10
+    bg-[#222]/80 backdrop-blur-3xl
+    transition-[width,padding] duration-300 ease-out
+    ${isRightBarHidden ? 'w-0 p-0 overflow-hidden' : 'w-110'}
+`}>
             {/* Header */}
             <div className="flex justify-between items-center px-4 py-3 border-b border-white/10 text-base max-md:px-3 max-md:py-2">
                 <h1 className="font-semibold text-gray-300 flex items-center text-sm max-md:text-base">
@@ -95,7 +93,7 @@ export default function RightInfoSideBar() {
                         {selectedNode ? '/' + selectedNode.path : ''}
                     </p>
                 </h1>
-                <button className="ml-2">
+                <button className="ml-2" onClick={toggleRightBarVisibility}>
                     <X className="text-gray-500 hover:text-gray-300 w-4 h-4 max-md:w-5 max-md:h-5 transition" />
                 </button>
             </div>
