@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { TreeNode } from "../types";
 interface NotesProps{
     selectedNode:TreeNode
@@ -9,8 +9,6 @@ export default function Notes({selectedNode}:NotesProps) {
     const [notesMap, setNotesMap] = useState<Record<string, string[]>>({});
 
     const [noteDraft, setNoteDraft] = useState('');
-
-    
 
 
     return (

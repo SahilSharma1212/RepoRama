@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDataStore } from '@/app/store/dataStore';
-import { X, Folder, File, Wand2, Code, Plus, Ban } from 'lucide-react';
+import { X, Folder, File, Wand2, Code, Plus, Ban, Info } from 'lucide-react';
 import useUIStore from '../store/uiStore';
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -62,14 +62,14 @@ export default function RightInfoSideBar() {
     }, [selectedNode]);
 
 
-    
+
 
     return (
         <div className={`
     h-screen flex flex-col border-l border-white/10
     bg-[#222]/80 backdrop-blur-3xl
     transition-[width,padding] duration-300 ease-out
-    ${isRightBarHidden ? 'w-0 p-0 overflow-hidden' : 'w-110'}
+    ${isRightBarHidden ? 'w-0 p-0 overflow-hidden' : 'w-130'}
 `}>
             {/* Header */}
             <div className="flex justify-between items-center px-4 py-3 border-b border-white/10 text-base max-md:px-3 max-md:py-2">
@@ -88,10 +88,13 @@ export default function RightInfoSideBar() {
                 </h1>
                 <div>
 
-                
-                <button className="ml-2" onClick={toggleRightBarVisibility}>
-                    <X className="text-gray-500 hover:text-gray-300 w-4 h-4 max-md:w-5 max-md:h-5 transition" />
-                </button>
+                    <button className="ml-2" onClick={() => { }}>
+                        <Info className="text-gray-500 hover:text-gray-300 w-4 h-4 max-md:w-5 max-md:h-5 transition" />
+                    </button>
+
+                    <button className="ml-2" onClick={toggleRightBarVisibility}>
+                        <X className="text-gray-500 hover:text-gray-300 w-4 h-4 max-md:w-5 max-md:h-5 transition" />
+                    </button>
                 </div>
             </div>
 
@@ -130,7 +133,7 @@ export default function RightInfoSideBar() {
                                     style={oneDark}
                                     showLineNumbers
                                     customStyle={{
-                                        width:"full",
+                                        width: "full",
                                         scrollbarWidth: 'thin',
                                         scrollbarColor: '#333333 #222222',
                                     }}
@@ -181,7 +184,7 @@ export default function RightInfoSideBar() {
                         )}
 
                         {activeTab === 'notes' && selectedNode && (
-                            <Notes selectedNode={selectedNode}/>
+                            <Notes selectedNode={selectedNode} />
                         )}
 
                     </>

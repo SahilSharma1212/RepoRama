@@ -1,26 +1,41 @@
-import React from 'react'
+import React from "react";
+import { motion } from "framer-motion";
 
-export default function loading() {
+const Loader: React.FC = () => {
+    const positions = [
+        { x: 0, y: 0 },
+        { x: 75, y: 0 },
+        { x: 75, y: 75 },
+        { x: 0, y: 75 },
+        { x: 0, y: 0 }, // loop back to start
+    ];
+
     return (
-        <div className='h-screen w-screen bg-[#111]'>
-
-
-
-
-
-            <div
-                className={`
-                w-110 h-screen flex flex-col border-l border-white/10
-                bg-[#222]/80 backdrop-blur-3xl
-                transition-all duration-300 ease-out
-                max-md:w-[90vw] max-md:h-[70vh] max-md:bottom-3 max-md:right-3
-                
-                    opacity-100 translate-y-0 scale-100 pointer-events-auto
-            `}
-            >
-
-            </div>
-
+        <div style={{ position: "relative", width: 100, height: 100, margin: "auto" }}>
+            {[0, 0.5, 1, 1.5].map((delay, i) => (
+                <motion.div
+                    key={i}
+                    animate={{
+                        x: positions.map((p) => p.x),
+                        y: positions.map((p) => p.y),
+                        rotate: [0, 90, 180, 270, 360],
+                    }}
+                    transition={{
+                        x: { duration: 2, repeat: Infinity, repeatType: "loop", ease: "linear", delay },
+                        y: { duration: 2, repeat: Infinity, repeatType: "loop", ease: "linear", delay },
+                        rotate: { duration: 2, repeat: Infinity, repeatType: "loop", ease: "linear", delay },
+                    }}
+                    style={{
+                        position: "absolute",
+                        width: 25,
+                        height: 25,
+                        background: "#4ade80",
+                        borderRadius: 4,
+                    }}
+                />
+            ))}
         </div>
-    )
-}
+    );
+};
+
+export default Loader;

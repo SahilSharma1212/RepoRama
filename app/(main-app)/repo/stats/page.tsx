@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { useDataStore } from "@/app/store/dataStore";
 import { fetchRepoStats } from "@/app/_utils/statsUtils/fetchStats";
+import Loader from "@/app/_components/Loader";
 
 export default function RepoStatsViewer() {
     const { repoStats } = useDataStore();
@@ -11,7 +12,7 @@ export default function RepoStatsViewer() {
         fetchRepoStats();
     }, []);
 
-    if (!repoStats) return <div className="text-gray-400 text-center mt-20">Loading repo stats...</div>;
+    if (!repoStats) return <Loader />;
 
     return (
         <div className="p-6 bg-gray-900 text-white rounded-xl border border-white/10 max-w-4xl mx-auto mt-10">

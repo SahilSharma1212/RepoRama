@@ -8,7 +8,7 @@ import { useDataStore } from "@/app/store/dataStore";
 import LeftFolderStructSideBar from "../../_components/LeftFolderStructSideBar";
 import RightInfoSideBar from '../../_components/RightInfoSideBar'
 import useUIStore from "@/app/store/uiStore";
-import { ListTree} from "lucide-react";
+import { ListTree } from "lucide-react";
 import RightSideAnimatedMiniBar from "@/app/_components/RightSideAnimatedMiniBar";
 export default function Page() {
     const { treeData, loading, error, fetchTree } = useDataStore();
@@ -25,8 +25,6 @@ export default function Page() {
         <div className="flex w-screen h-screen overflow-hidden">
             {/* Code structure to be displayed */}
             {/* Folder tree sidebar */}
-
-
             <LeftFolderStructSideBar />
             {isLeftBarHidden &&
                 (<div className="absolute top-5 left-5 z-50 bg-[#222] text-white p-2 rounded hover:bg-[#333]"
@@ -48,7 +46,7 @@ export default function Page() {
                     onClick={toggleRightBarVisibility}
                     title="Show Directory Tree"
                 >
-                    <RightSideAnimatedMiniBar/>
+                    <RightSideAnimatedMiniBar />
                 </div>
                 )
             }
