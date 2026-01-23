@@ -5,7 +5,7 @@ export default function page() {
   return (
     <div>
       <Navbar />
-      <div className=''>
+      <div className='pb-10'>
         <HeroSection />
       </div>
     </div>

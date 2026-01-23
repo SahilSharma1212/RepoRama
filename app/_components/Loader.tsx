@@ -1,24 +1,27 @@
-'use client'
+'use client';
 import { motion } from "framer-motion";
 
 const Loader = () => {
-    const positions = [
+    const size = 40;
+    const distance = 75;
+
+    const path = [
         { x: 0, y: 0 },
-        { x: 75, y: 0 },
-        { x: 75, y: 75 },
-        { x: 0, y: 75 },
-        { x: 0, y: 0 }, // loop back to start
+        { x: distance, y: 0 },
+        { x: distance, y: distance },
+        { x: 0, y: distance },
+        { x: 0, y: 0 },
     ];
 
     return (
         <div className="flex items-center justify-center h-screen">
-            <div style={{ position: "relative", width: 100, height: 100, margin: "auto" }}>
+            <div style={{ position: "relative", width: distance + size, height: distance + size }}>
                 {[0, 0.5, 1, 1.5].map((delay, i) => (
                     <motion.div
                         key={i}
                         animate={{
-                            x: positions.map((p) => p.x),
-                            y: positions.map((p) => p.y),
+                            x: path.map(p => p.x),
+                            y: path.map(p => p.y),
                             rotate: [0, 90, 180, 270, 360],
                         }}
                         transition={{
@@ -28,8 +31,8 @@ const Loader = () => {
                         }}
                         style={{
                             position: "absolute",
-                            width: 40,
-                            height: 40,
+                            width: size,
+                            height: size,
                             background: "#666",
                             borderRadius: 4,
                         }}
