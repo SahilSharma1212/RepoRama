@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { Network, Data, Node, Edge, Options } from "vis-network/standalone";
-import type { TreeNode } from "../types";
+import type { TreeNode } from "../app/types";
 import { getFolderColor } from "@/app/_utils/folderColors";
-import { fileColors } from "../_utils/treeAndNodeUtils/fileColors";
+import { fileColors } from "../app/_utils/treeAndNodeUtils/fileColors";
 import { useDataStore } from "@/app/store/dataStore";
 import { filterTree } from "@/app/_utils/treeAndNodeUtils/filterTree";
 

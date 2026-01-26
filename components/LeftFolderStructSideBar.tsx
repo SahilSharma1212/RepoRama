@@ -1,9 +1,9 @@
 'use client'
 
 import { ListTree, X } from 'lucide-react'
-import FolderTree from '../(main-app)/visualiser/FolderStructure'
+import FolderTree from '../app/(main-app)/visualiser/FolderStructure'
 import { useDataStore } from '@/app/store/dataStore'
-import useUIStore from '../store/uiStore'
+import useUIStore from '../app/store/uiStore'
 
 export default function LeftFolderStructSideBar() {
     const { treeData } = useDataStore()

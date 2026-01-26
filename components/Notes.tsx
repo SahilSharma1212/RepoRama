@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react"
-import { TreeNode } from "../types";
+import { TreeNode } from "../app/types";
 interface NotesProps{
     selectedNode:TreeNode
 }

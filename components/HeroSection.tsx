@@ -18,19 +18,19 @@ export default function HeroSection() {
                 grid-cols-1
                 lg:grid-cols-3">
 
-                <div className="lg:col-span-2 min-h-[500px]">
+                <div className="lg:col-span-2 min-h-125">
                     <VisualiserLandingSection />
                 </div>
 
-                <div className="lg:col-span-1 min-h-[500px]">
+                <div className="lg:col-span-1 min-h-125">
                     <NotesCardLanding />
                 </div>
 
-                <div className="lg:col-span-1 min-h-[400px]">
+                <div className="lg:col-span-1 min-h-100">
                     <GithubWrapped />
                 </div>
 
-                <div className="lg:col-span-2 min-h-[400px]">
+                <div className="lg:col-span-2 min-h-100">
                     <AISummarisationLanding />
                 </div>
             </div>

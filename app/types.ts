@@ -66,3 +66,32 @@ export interface BranchStats {
     sha: string;
     protected: boolean;
 }
+
+export type GithubProfile = {
+    github_login?: string;
+    github_id?: number;
+    github_node_id?: string;
+    github_type?: string;
+    github_avatar_url?: string;
+    github_profile_url?: string;
+    github_name?: string;
+    github_company?: string;
+    github_blog?: string;
+    github_location?: string;
+    github_bio?: string;
+    github_email?: string;
+    github_twitter_username?: string;
+    github_site_admin?: boolean;
+    github_public_repos?: number;
+    github_public_gists?: number;
+    github_followers?: number;
+    github_following?: number;
+    github_created_at?: string; // ISO date string
+    github_updated_at?: string; // ISO date string
+    github_followers_url?: string;
+    github_following_url?: string;
+    github_repos_url?: string;
+    clerk_user_id?: string; // assuming UUID stored as string
+    created_at?: string;  // DB timestamp as ISO string
+    id?: number;          // internal DB ID
+};

@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useDataStore } from "@/app/store/dataStore";
 import { fetchRepoStats } from "@/app/_utils/statsUtils/fetchStats";
-import Loader from "@/app/_components/Loader";
+import Loader from "@/components/Loader";
 
 export default function RepoStatsViewer() {
     const { repoStats } = useDataStore();

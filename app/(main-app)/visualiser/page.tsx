@@ -1,15 +1,15 @@
 'use client'
 
 import { useEffect } from "react";
-import VisGraph from "@/app/_components/TreeNetwork";
-import { NetworkSkeleton } from "../../_components/NetworkSkeleton";
+import VisGraph from "@/components/TreeNetwork";
+import { NetworkSkeleton } from "../../../components/NetworkSkeleton";
 import TopBar from "./TopBar";
 import { useDataStore } from "@/app/store/dataStore";
-import LeftFolderStructSideBar from "../../_components/LeftFolderStructSideBar";
-import RightInfoSideBar from '../../_components/RightInfoSideBar'
+import LeftFolderStructSideBar from "../../../components/LeftFolderStructSideBar";
+import RightInfoSideBar from '../../../components/RightInfoSideBar'
 import useUIStore from "@/app/store/uiStore";
 import { ListTree } from "lucide-react";
-import RightSideAnimatedMiniBar from "@/app/_components/RightSideAnimatedMiniBar";
+import RightSideAnimatedMiniBar from "@/components/RightSideAnimatedMiniBar";
 export default function Page() {
     const { treeData, loading, error, fetchTree } = useDataStore();
 

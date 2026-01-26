@@ -51,7 +51,7 @@ export default function VisualiserLandingSection() {
                 <div className="flex justify-center pb-5">
                     <div className="
                     relative w-full
-                    max-w-[760px]
+                    max-w-190
                     aspect-video
                     mt-9
                     max-md:mt-10

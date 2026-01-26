@@ -1,15 +1,13 @@
 'use client'
 import { User } from "lucide-react";
 import {
-    SignInButton,
     SignedIn,
     SignedOut,
     UserButton,
-    useAuth,
 } from '@clerk/nextjs'
 import Link from "next/link";
 export default function Navbar() {
-    const { userId } = useAuth();
+
     return (
         <nav
             className="
@@ -43,13 +41,13 @@ export default function Navbar() {
                         bg-clip-text text-transparent
                     "
                 >
-                    <Link href={`/visualiser`} className="cursor-pointer border-b border-transparent hover:border-gray-400 transition-all duration-300">
+                    <Link href={`/visualiser`} className="cursor-pointer border-b border-transparent hover:border-gray-400 transition-all duration-300 max-md:hidden">
                         Demo
                     </Link>
                     <Link href={'/'} className="cursor-pointer border-b border-transparent hover:border-gray-400 transition-all duration-300">
                         Home
                     </Link>
-                    <Link href={`/dashboard/${userId}`} className="cursor-pointer border-b border-transparent hover:border-gray-400 transition-all duration-300">
+                    <Link href={`/dashboard`} className="cursor-pointer border-b border-transparent hover:border-gray-400 transition-all duration-300">
                         Dashboard
                     </Link>
                     <Link href={''} className="cursor-pointer border-b border-transparent hover:border-gray-400 transition-all duration-300">
@@ -74,9 +72,8 @@ export default function Navbar() {
                 overflow-hidden
             "
                         >
-                            <SignInButton mode="redirect">
-                                <button
-                                    className="
+                            <Link href={'/sign-in'}
+                                className="
                         cursor-pointer
                         px-4 py-2
                         hover:bg-[#333]
@@ -84,11 +81,10 @@ export default function Navbar() {
                         transition-all duration-300
                         flex items-center gap-2
                     "
-                                >
-                                    <span className="max-sm:hidden">Login</span>
-                                    <User className="text-gray-100" strokeWidth={1} />
-                                </button>
-                            </SignInButton>
+                            >
+                                <span className="max-sm:hidden">Login</span>
+                                <User className="text-gray-100" strokeWidth={1} />
+                            </Link>
                         </div>
                     </SignedOut>
 
