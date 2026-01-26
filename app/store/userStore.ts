@@ -1,12 +1,21 @@
 import { create } from 'zustand'
 import { GithubProfile } from '../types'
 import axios from 'axios'
-
+type repoType = {
+    id: string
+    created_at: string
+    clerk_user_id: string
+    description: string | null
+    github_repo_url: string
+}
 type UserStore = {
     user: GithubProfile | null
     setUser: (user: GithubProfile) => void
     clearUser: () => void
     fetchUser: (userId: string) => Promise<void>
+    repos: repoType[]
+    fetchUserRepos: (userId: string) => Promise<void>
+    isFetchingRepos: boolean
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -29,5 +38,27 @@ export const useUserStore = create<UserStore>((set) => ({
             console.error("Failed to fetch user:", err)
             set({ user: null })
         }
-    }
+    },
+
+    isFetchingRepos: false,
+    fetchUserRepos: async (userId: string) => {
+        if (!userId) return
+        set({ isFetchingRepos: true }) // <-- Start loading
+
+        try {
+            const res = await axios.get(`/api/repo?userId=${userId}`)
+
+            if (res.data) {
+                set({ repos: res.data })
+            } else {
+                set({ repos: [] })
+            }
+        } catch (err: any) {
+            console.error("Failed to fetch user repos:", err)
+            set({ repos: [] })
+        } finally {
+            set({ isFetchingRepos: false }) // <-- Stop loading
+        }
+    },
+    repos: [],
 }))

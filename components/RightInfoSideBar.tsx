@@ -8,8 +8,8 @@ import useUIStore from '../app/store/uiStore';
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { getLanguage } from '../app/_utils/getLanguage';
-import '../globals.css'
-import Notes from './Notes';
+import '../app/globals.css'
+import Notes from './Notes'
 export default function RightInfoSideBar() {
     const { selectedNode, setSelectedNode } = useDataStore();
     const { isRightBarHidden, toggleRightBarVisibility } = useUIStore();

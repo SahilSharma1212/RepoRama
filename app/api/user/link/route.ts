@@ -1,13 +1,20 @@
 import { supabase } from "@/app/_utils/supabase/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
 
+import { auth } from '@clerk/nextjs/server';
+
 export async function POST(req: NextRequest) {
     try {
+        const { userId } = await auth();
         // Parse query params from the URL (GET request doesn't have a body)
-        const { userId, githubUsername } = await req.json();
+        const { githubUsername } = await req.json();
 
-        if (!userId || !githubUsername) {
-            return NextResponse.json({ error: "Missing userId or githubUsername" }, { status: 400 });
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        if (!githubUsername) {
+            return NextResponse.json({ error: "Missing githubUsername" }, { status: 400 });
         }
 
         // Check if user already exists
