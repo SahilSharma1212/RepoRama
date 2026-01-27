@@ -1,13 +1,112 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { Star, GitFork, Eye, Calendar, Code, Users, GitBranch, AlertCircle, GitCommit, User, Github, ChevronDown, File, Folder, FolderOpen } from "lucide-react"
+import { Suspense, useEffect, useState } from "react"
+import { Star, GitFork, Eye, Calendar, Code, Users, GitBranch, AlertCircle, GitCommit, User, Github, ChevronDown, File, Folder } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import type { RepoData, LanguageData, Contributor, Commit, Branch, TreeItem } from "@/app/types"
 import Link from "next/link"
 import toast, { Toaster } from "react-hot-toast"
 
-export default function GitHubDashboard() {
+function DashboardSkeleton() {
+    return (
+        <div className="min-h-screen text-white p-8 animate-pulse">
+            <div className="max-w-7xl mx-auto space-y-8">
+                {/* Header Skeleton */}
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-6">
+                        <div className="w-20 h-20 rounded-full bg-gray-700" />
+                        <div className="space-y-3">
+                            <div className="h-10 w-64 bg-gray-700 rounded" />
+                            <div className="h-6 w-48 bg-gray-700 rounded" />
+                            <div className="h-4 w-96 bg-gray-700 rounded" />
+                        </div>
+                    </div>
+                    <div className="w-14 h-14 bg-gray-700 rounded-lg" />
+                </div>
+
+                {/* Actions Grid Skeleton */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="bg-[#222] backdrop-blur rounded-xl p-4 border border-gray-700">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-gray-700 rounded-lg" />
+                                <div className="h-5 w-32 bg-gray-700 rounded" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Stats Grid Skeleton */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-5 h-5 bg-gray-700 rounded" />
+                                <div className="h-4 w-20 bg-gray-700 rounded" />
+                            </div>
+                            <div className="h-9 w-16 bg-gray-700 rounded" />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Branch Content Skeleton */}
+                <div className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-6 h-6 bg-gray-700 rounded" />
+                            <div className="h-7 w-48 bg-gray-700 rounded" />
+                        </div>
+                        <div className="h-4 w-32 bg-gray-700 rounded" />
+                    </div>
+                    <div className="space-y-2">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="flex items-center gap-3 p-3">
+                                <div className="w-5 h-5 bg-gray-700 rounded flex-shrink-0" />
+                                <div className="h-4 flex-1 bg-gray-700 rounded" />
+                                <div className="h-3 w-16 bg-gray-700 rounded" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Two Column Layout Skeleton */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {[1, 2].map((i) => (
+                        <div key={i} className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-6 h-6 bg-gray-700 rounded" />
+                                <div className="h-7 w-32 bg-gray-700 rounded" />
+                            </div>
+                            <div className="space-y-4">
+                                {[1, 2, 3].map((j) => (
+                                    <div key={j} className="h-16 bg-gray-700 rounded" />
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Repository Details Skeleton */}
+                <div className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="w-6 h-6 bg-gray-700 rounded" />
+                        <div className="h-7 w-48 bg-gray-700 rounded" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="space-y-2">
+                                <div className="h-4 w-24 bg-gray-700 rounded" />
+                                <div className="h-6 w-32 bg-gray-700 rounded" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function GitHubDashboardContent() {
     const [repoData, setRepoData] = useState<RepoData>({})
     const [languageData, setLanguageData] = useState<LanguageData>({})
     const [contributors, setContributors] = useState<Contributor[]>([])
@@ -42,7 +141,6 @@ export default function GitHubDashboard() {
                 if (Array.isArray(contribJson)) {
                     setContributors(contribJson)
                 } else {
-                    console.log("Contributors response is not an array:", contribJson)
                     setContributors([])
                 }
 
@@ -52,7 +150,6 @@ export default function GitHubDashboard() {
                 if (Array.isArray(commitsJson)) {
                     setCommits(commitsJson)
                 } else {
-                    console.log("Commits response is not an array:", commitsJson)
                     setCommits([])
                 }
 
@@ -62,7 +159,6 @@ export default function GitHubDashboard() {
                 if (Array.isArray(branchesJson)) {
                     setBranches(branchesJson)
                 } else {
-                    console.log("Branches response is not an array:", branchesJson)
                     setBranches([])
                 }
 
@@ -96,16 +192,19 @@ export default function GitHubDashboard() {
             )
             const data = await response.json()
 
-            if (data.tree) {
+            if (data.tree && Array.isArray(data.tree)) {
                 // Filter to show only root level items and first level subdirectories
                 const rootItems = data.tree.filter((item: TreeItem) => {
                     const pathParts = item.path.split('/')
                     return pathParts.length <= 2
                 })
                 setBranchContent(rootItems)
+            } else {
+                setBranchContent([])
             }
         } catch (error) {
             console.error("Error fetching branch content:", error)
+            setBranchContent([])
         }
         setLoadingBranchContent(false)
     }
@@ -172,11 +271,7 @@ export default function GitHubDashboard() {
     }
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-gray-400 text-xl">Loading...</div>
-            </div>
-        )
+        return <DashboardSkeleton />
     }
 
     const languages = calculateLanguagePercentages()
@@ -196,7 +291,7 @@ export default function GitHubDashboard() {
                         )}
 
                         <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 max-md:flex-col max-md:items-start">
                                 <h1 className="text-3xl font-semibold tracking-tight max-md:text-2xl">
                                     {repoData.name}
                                 </h1>
@@ -235,6 +330,8 @@ export default function GitHubDashboard() {
 
                                     <Link
                                         href={`${repoData.html_url}/stargazers`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="flex items-center gap-1 px-3 py-2 rounded-lg bg-yellow-500/5 text-yellow-500 border border-amber-500/30 hover:bg-yellow-500/10 transition"
                                     >
                                         <Star className="w-4 h-4" />
@@ -312,24 +409,30 @@ export default function GitHubDashboard() {
 
                         {isDropdownOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-[#222] border border-gray-700 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
-                                {branches.map((branch) => (
-                                    <button
-                                        key={branch.name}
-                                        onClick={() => handleBranchChange(branch.name)}
-                                        className={`w-full text-left px-4 py-3 hover:bg-[#333] transition-colors border-b border-gray-700 last:border-b-0 ${selectedBranch === branch.name ? 'bg-green-500/10 text-green-400' : 'text-white'
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <GitBranch className="w-4 h-4" />
-                                            <span className="font-mono text-sm">{branch.name}</span>
-                                            {branch.protected && (
-                                                <span className="ml-auto text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">
-                                                    Protected
-                                                </span>
-                                            )}
-                                        </div>
-                                    </button>
-                                ))}
+                                {!Array.isArray(branches) || branches.length === 0 ? (
+                                    <div className="px-4 py-3 text-gray-400 text-sm">
+                                        No branches found
+                                    </div>
+                                ) : (
+                                    branches.map((branch) => (
+                                        <button
+                                            key={branch.name}
+                                            onClick={() => handleBranchChange(branch.name)}
+                                            className={`w-full text-left px-4 py-3 hover:bg-[#333] transition-colors border-b border-gray-700 last:border-b-0 ${selectedBranch === branch.name ? 'bg-green-500/10 text-green-400' : 'text-white'
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <GitBranch className="w-4 h-4" />
+                                                <span className="font-mono text-sm">{branch.name}</span>
+                                                {branch.protected && (
+                                                    <span className="ml-auto text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">
+                                                        Protected
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </button>
+                                    ))
+                                )}
                             </div>
                         )}
                     </div>
@@ -339,7 +442,7 @@ export default function GitHubDashboard() {
                         onClick={() => {
                             const cloneUrl = `https://github.com/${repoData.full_name}.git`
                             navigator.clipboard.writeText("git clone " + cloneUrl)
-                            toast.success("Copied clone command !")
+                            toast.success("Copied clone command!")
                         }}
                         className="group relative bg-linear-to-br from-blue-600/20 to-blue-800/20 backdrop-blur rounded-xl p-4 border border-blue-500/30 hover:border-blue-400/50 transition-all hover:shadow-lg hover:shadow-blue-500/20 text-left"
                     >
@@ -363,7 +466,7 @@ export default function GitHubDashboard() {
                             <Star className="w-5 h-5 text-yellow-500" />
                             <span className="text-gray-400">Stars</span>
                         </div>
-                        <div className="text-3xl font-bold">{repoData.stargazers_count}</div>
+                        <div className="text-3xl font-bold">{repoData.stargazers_count || 0}</div>
                     </div>
 
                     <div className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
@@ -371,7 +474,7 @@ export default function GitHubDashboard() {
                             <GitFork className="w-5 h-5 text-blue-500" />
                             <span className="text-gray-400">Forks</span>
                         </div>
-                        <div className="text-3xl font-bold">{repoData.forks_count}</div>
+                        <div className="text-3xl font-bold">{repoData.forks_count || 0}</div>
                     </div>
 
                     <div className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
@@ -379,7 +482,7 @@ export default function GitHubDashboard() {
                             <Eye className="w-5 h-5 text-green-500" />
                             <span className="text-gray-400">Watchers</span>
                         </div>
-                        <div className="text-3xl font-bold">{repoData.watchers_count}</div>
+                        <div className="text-3xl font-bold">{repoData.watchers_count || 0}</div>
                     </div>
 
                     <div className="bg-[#222] backdrop-blur rounded-xl p-6 border border-gray-700">
@@ -387,7 +490,7 @@ export default function GitHubDashboard() {
                             <AlertCircle className="w-5 h-5 text-red-500" />
                             <span className="text-gray-400">Open Issues</span>
                         </div>
-                        <div className="text-3xl font-bold">{repoData.open_issues_count}</div>
+                        <div className="text-3xl font-bold">{repoData.open_issues_count || 0}</div>
                     </div>
                 </div>
 
@@ -396,7 +499,7 @@ export default function GitHubDashboard() {
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
                             <GitBranch className="w-6 h-6 text-blue-400" />
-                            <h2 className="text-2xl font-semibold"> {selectedBranch} :</h2>
+                            <h2 className="text-2xl font-semibold">{selectedBranch}:</h2>
                         </div>
                         <a
                             href={`${repoData.html_url}/tree/${selectedBranch}`}
@@ -456,23 +559,29 @@ export default function GitHubDashboard() {
                             <h2 className="text-2xl font-semibold">Languages</h2>
                         </div>
                         <div className="space-y-4">
-                            {languages.map((lang) => (
-                                <div key={lang.name}>
-                                    <div className="flex justify-between mb-2">
-                                        <span className="text-gray-300">{lang.name}</span>
-                                        <span className="text-gray-400">{lang.percentage}%</span>
-                                    </div>
-                                    <div className="w-full bg-[#333] rounded-full h-3 overflow-hidden">
-                                        <div
-                                            className="h-full rounded-full transition-all"
-                                            style={{
-                                                width: `${lang.percentage}%`,
-                                                backgroundColor: languageColors[lang.name] || "#6b7280"
-                                            }}
-                                        />
-                                    </div>
+                            {languages.length === 0 ? (
+                                <div className="text-center py-8 text-gray-400">
+                                    No language data available
                                 </div>
-                            ))}
+                            ) : (
+                                languages.map((lang) => (
+                                    <div key={lang.name}>
+                                        <div className="flex justify-between mb-2">
+                                            <span className="text-gray-300">{lang.name}</span>
+                                            <span className="text-gray-400">{lang.percentage}%</span>
+                                        </div>
+                                        <div className="w-full bg-[#333] rounded-full h-3 overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full transition-all"
+                                                style={{
+                                                    width: `${lang.percentage}%`,
+                                                    backgroundColor: languageColors[lang.name] || "#6b7280"
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -523,7 +632,7 @@ export default function GitHubDashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
                             <div className="text-gray-400 mb-1">Default Branch</div>
-                            <div className="text-lg font-medium">{repoData.default_branch}</div>
+                            <div className="text-lg font-medium">{repoData.default_branch || "N/A"}</div>
                         </div>
                         <div>
                             <div className="text-gray-400 mb-1">Total Branches</div>
@@ -531,7 +640,7 @@ export default function GitHubDashboard() {
                         </div>
                         <div>
                             <div className="text-gray-400 mb-1">Visibility</div>
-                            <div className="text-lg font-medium capitalize">{repoData.visibility}</div>
+                            <div className="text-lg font-medium capitalize">{repoData.visibility || "N/A"}</div>
                         </div>
                         <div>
                             <div className="text-gray-400 mb-1">Repository Size</div>
@@ -578,54 +687,68 @@ export default function GitHubDashboard() {
                         <h2 className="text-2xl font-semibold">Recent Commits</h2>
                     </div>
                     <div className="space-y-3 custom-scrollbar max-h-[350px] overflow-y-auto px-">
-                        {commits.map((commit) => (
-                            <a
-                                key={commit.sha}
-                                href={commit.html_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block p-4 rounded-lg bg-[#333] hover:bg-[#444] transition-colors border border-gray-600/50"
-                            >
-                                <div className="flex items-start gap-4">
-                                    {commit.author ? (
-                                        <img
-                                            src={commit.author.avatar_url}
-                                            alt={commit.author.login}
-                                            className="w-10 h-10 rounded-full"
-                                        />
-                                    ) : (
-                                        <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
-                                            <User className="w-6 h-6 text-gray-400" />
-                                        </div>
-                                    )}
-                                    <div className="flex-1 min-w-0">
-                                        <div className="font-medium text-white mb-1">
-                                            {truncateMessage(commit.commit.message)}
-                                        </div>
-                                        <div className="flex items-center gap-4 text-sm text-gray-400">
-                                            <span className="flex items-center gap-1">
-                                                {commit.commit.author.name}
-                                            </span>
-                                            <span>•</span>
-                                            <span>{formatRelativeTime(commit.commit.author.date)}</span>
-                                            <span>•</span>
-                                            <span className="font-mono text-xs bg-gray-600/50 px-2 py-1 rounded">
-                                                {commit.sha.substring(0, 7)}
-                                            </span>
-                                        </div>
-                                        {commit.commit.verification.verified && (
-                                            <div className="mt-2 inline-flex items-center gap-1 text-xs text-green-400">
-                                                <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-                                                Verified
+                        {!Array.isArray(commits) || commits.length === 0 ? (
+                            <div className="text-center py-8 text-gray-400">
+                                No commits found
+                            </div>
+                        ) : (
+                            commits.map((commit) => (
+                                <a
+                                    key={commit.sha}
+                                    href={commit.html_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block p-4 rounded-lg bg-[#333] hover:bg-[#444] transition-colors border border-gray-600/50"
+                                >
+                                    <div className="flex items-start gap-4">
+                                        {commit.author ? (
+                                            <img
+                                                src={commit.author.avatar_url}
+                                                alt={commit.author.login}
+                                                className="w-10 h-10 rounded-full"
+                                            />
+                                        ) : (
+                                            <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
+                                                <User className="w-6 h-6 text-gray-400" />
                                             </div>
                                         )}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="font-medium text-white mb-1">
+                                                {truncateMessage(commit.commit.message)}
+                                            </div>
+                                            <div className="flex items-center gap-4 text-sm text-gray-400">
+                                                <span className="flex items-center gap-1">
+                                                    {commit.commit.author.name}
+                                                </span>
+                                                <span>•</span>
+                                                <span>{formatRelativeTime(commit.commit.author.date)}</span>
+                                                <span>•</span>
+                                                <span className="font-mono text-xs bg-gray-600/50 px-2 py-1 rounded">
+                                                    {commit.sha.substring(0, 7)}
+                                                </span>
+                                            </div>
+                                            {commit.commit.verification.verified && (
+                                                <div className="mt-2 inline-flex items-center gap-1 text-xs text-green-400">
+                                                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
+                                                    Verified
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        ))}
+                                </a>
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function GitHubDashboard() {
+    return (
+        <Suspense fallback={<DashboardSkeleton />}>
+            <GitHubDashboardContent />
+        </Suspense>
     )
 }
