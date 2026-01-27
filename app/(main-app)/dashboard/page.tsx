@@ -80,8 +80,8 @@ export default function PostPage() {
             setUser(res.data.user)
             setGithubUsername('')
             setIsGithubLinkOpen(false)
-        } catch (err: any) {
-            toast.error(err.response?.data?.error || 'Something went wrong')
+        } catch (err) {
+            toast.error('Something went wrong')
         } finally {
             setIsLinkingGithub(false)
         }
@@ -109,8 +109,8 @@ export default function PostPage() {
             setRepoDescription('')
             setIsAddRepoOpen(false)
             fetchUserRepos(userId)
-        } catch (err: any) {
-            toast.error(err.response?.data?.error || 'Failed to add repo')
+        } catch (err) {
+            toast.error('Failed to add repo')
         } finally {
             setIsAddingRepo(false)
         }
@@ -128,9 +128,9 @@ export default function PostPage() {
 
                 <div className="flex items-center gap-3">
                     {user ? (
-                        <Link href="/dashboard/profile">
+                        <Link href="/dashboard/profile" target='_blank'>
                             <Image
-                                src={user.github_avatar_url!}
+                                src={user.avatar_url!}
                                 alt="avatar"
                                 width={28}
                                 height={28}
@@ -160,10 +160,13 @@ export default function PostPage() {
                         </div>
                     ))
                     : repos.map((repo) => (
-                        <div
+                        <Link
+                            href={`/dashboard/repo?repoOwner=${repo.github_repo_url.split('/').filter(Boolean).slice(-2)[0]}&repoName=${repo.github_repo_url.split('/').filter(Boolean).slice(-2)[1]}`}
+                            target="_blank"
                             key={repo.id}
                             className="flex justify-between bg-[#252525] p-6 rounded-sm border border-transparent hover:border-white/10 hover:shadow-lg hover:shadow-white/5 hover:scale-102 transition"
                         >
+
                             <div className="overflow-hidden">
                                 <h3 className="text-lg font-semibold text-gray-200 truncate">
                                     {repo.github_repo_url.split('/').slice(-2).join('/')}
@@ -172,10 +175,8 @@ export default function PostPage() {
                                     {repo.description || 'No description'}
                                 </p>
                             </div>
-                            <a href={repo.github_repo_url} target="_blank">
-                                <ArrowRight className="text-gray-500 -rotate-45 hover:rotate-0 transition" />
-                            </a>
-                        </div>
+                            <ArrowRight className="text-gray-500 -rotate-45 hover:rotate-0 transition" />
+                        </Link>
                     ))}
 
                 {/* ADD CARD */}

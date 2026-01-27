@@ -16,7 +16,7 @@ export default function LinkGithubPage() {
 
     useEffect(() => {
         if (userId) fetchUser(userId)
-    }, [userId])
+    }, [userId, fetchUser])
     const extractGithubUsername = (url: string) => {
         try {
             const parsed = new URL(url)
@@ -45,8 +45,11 @@ export default function LinkGithubPage() {
                 setUser(res.data.user)
                 setGithubUsername('')
             }
-        } catch (err: any) {
-            if (err.response?.data?.error) toast.error(err.response.data.error)
+        } catch (err) {
+            if (err) {
+                toast.error("An unkown error occured !")
+                console.log(err)
+            }
             else toast.error('Something went wrong. Please try again.')
         } finally {
             setIsLinkingGithub(false)
@@ -56,13 +59,13 @@ export default function LinkGithubPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] p-4">
             <div className="max-w-2xl w-full bg-[#1a1a1a] rounded-xl p-6 border border-white/5 shadow-xl">
-                {user && user.github_login ? (
+                {user && user.login ? (
                     <>
                         <div className="flex items-center gap-4 mb-6">
-                            {user.github_avatar_url && (
+                            {user.avatar_url && (
                                 <Image
-                                    src={user.github_avatar_url}
-                                    alt={user.github_login}
+                                    src={user.avatar_url}
+                                    alt={user.login}
                                     width={80}
                                     height={80}
                                     className="rounded-full border border-white/20"
@@ -76,21 +79,21 @@ export default function LinkGithubPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-300">
                             <div>
                                 <span className="font-semibold text-gray-400 block">Login</span>
-                                {user.github_login}
+                                {user.login}
                             </div>
                             <div>
                                 <span className="font-semibold text-gray-400 block">ID</span>
-                                {user.github_id}
+                                {user.id}
                             </div>
                             <div>
                                 <span className="font-semibold text-gray-400 block">Type</span>
-                                {user.github_type}
+                                {user.type}
                             </div>
-                            {user.github_profile_url && (
+                            {user.html_url && (
                                 <div>
                                     <span className="font-semibold text-gray-400 block">Profile</span>
                                     <a
-                                        href={user.github_profile_url}
+                                        href={user.html_url}
                                         target="_blank"
                                         rel="noreferrer"
                                         className="text-blue-400 hover:underline"
@@ -99,40 +102,40 @@ export default function LinkGithubPage() {
                                     </a>
                                 </div>
                             )}
-                            {user.github_name && (
+                            {user.name && (
                                 <div>
                                     <span className="font-semibold text-gray-400 block">Name</span>
-                                    {user.github_name}
+                                    {user.name}
                                 </div>
                             )}
-                            {user.github_company && (
+                            {user.company && (
                                 <div>
                                     <span className="font-semibold text-gray-400 block">Company</span>
-                                    {user.github_company}
+                                    {user.company}
                                 </div>
                             )}
-                            {user.github_location && (
+                            {user.location && (
                                 <div>
                                     <span className="font-semibold text-gray-400 block">Location</span>
-                                    {user.github_location}
+                                    {user.location}
                                 </div>
                             )}
-                            {user.github_email && (
+                            {user.email && (
                                 <div>
                                     <span className="font-semibold text-gray-400 block">Email</span>
-                                    {user.github_email}
+                                    {user.email}
                                 </div>
                             )}
-                            {user.github_blog && (
+                            {user.blog && (
                                 <div className="col-span-full">
                                     <span className="font-semibold text-gray-400 block">Blog</span>
                                     <a
-                                        href={user.github_blog}
+                                        href={user.blog}
                                         target="_blank"
                                         rel="noreferrer"
                                         className="text-blue-400 hover:underline"
                                     >
-                                        {user.github_blog}
+                                        {user.blog}
                                     </a>
                                 </div>
                             )}
@@ -140,21 +143,21 @@ export default function LinkGithubPage() {
 
                         {/* Stats */}
                         <div className="grid grid-cols-3 gap-4 mt-6 text-center text-white">
-                            {user.github_public_repos != null && (
+                            {user.public_repos != null && (
                                 <div>
-                                    <div className="text-2xl font-bold">{user.github_public_repos}</div>
+                                    <div className="text-2xl font-bold">{user.public_repos}</div>
                                     <div className="text-gray-400 text-sm">Repositories</div>
                                 </div>
                             )}
-                            {user.github_followers != null && (
+                            {user.followers != null && (
                                 <div>
-                                    <div className="text-2xl font-bold">{user.github_followers}</div>
+                                    <div className="text-2xl font-bold">{user.followers}</div>
                                     <div className="text-gray-400 text-sm">Followers</div>
                                 </div>
                             )}
-                            {user.github_following != null && (
+                            {user.following != null && (
                                 <div>
-                                    <div className="text-2xl font-bold">{user.github_following}</div>
+                                    <div className="text-2xl font-bold">{user.following}</div>
                                     <div className="text-gray-400 text-sm">Following</div>
                                 </div>
                             )}
@@ -162,36 +165,30 @@ export default function LinkGithubPage() {
                     </>
                 ) : (
                     <>
-                        <h2 className="text-2xl font-bold text-white mb-2">
-                            Link GitHub Account
-                        </h2>
-                        <p className="text-gray-400 mb-6">
-                            Connect your GitHub profile to get started
-                        </p>
+                        <div className="animate-pulse space-y-8">
+                            <div className="flex items-center gap-4">
+                                <div className="w-20 h-20 bg-white/10 rounded-full" />
+                                <div className="h-8 w-48 bg-white/10 rounded-md" />
+                            </div>
 
-                        <form onSubmit={linkGithub} className="space-y-4">
-                            <input
-                                placeholder="GitHub Profile URL or Username"
-                                className="w-full bg-[#252525] border border-white/10 p-3 text-gray-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                                value={githubUsername}
-                                onChange={(e) => setGithubUsername(e.target.value)}
-                            />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {[...Array(6)].map((_, i) => (
+                                    <div key={i} className="space-y-2">
+                                        <div className="h-4 w-16 bg-white/5 rounded" />
+                                        <div className="h-5 w-32 bg-white/10 rounded" />
+                                    </div>
+                                ))}
+                            </div>
 
-                            <button
-                                type="submit"
-                                disabled={isLinkingGithub || !githubUsername}
-                                className="w-full py-3 bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {isLinkingGithub ? (
-                                    <>
-                                        <Loader2 className="animate-spin" />
-                                        Linking...
-                                    </>
-                                ) : (
-                                    'Link GitHub Account'
-                                )}
-                            </button>
-                        </form>
+                            <div className="grid grid-cols-3 gap-4 pt-4">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i} className="flex flex-col items-center space-y-2">
+                                        <div className="h-8 w-12 bg-white/10 rounded" />
+                                        <div className="h-4 w-20 bg-white/5 rounded" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </>
                 )}
             </div>

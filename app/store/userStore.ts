@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { GithubProfile } from '../types'
+import { GithubApiProfile, GithubProfile } from '../types'
 import axios from 'axios'
 type repoType = {
     id: string
@@ -9,8 +9,8 @@ type repoType = {
     github_repo_url: string
 }
 type UserStore = {
-    user: GithubProfile | null
-    setUser: (user: GithubProfile) => void
+    user: GithubApiProfile | null
+    setUser: (user: GithubApiProfile) => void
     clearUser: () => void
     fetchUser: (userId: string) => Promise<void>
     repos: repoType[]
@@ -29,12 +29,12 @@ export const useUserStore = create<UserStore>((set) => ({
                 params: { userId }
             })
 
-            if (res.data?.user) {
-                set({ user: res.data.user })
+            if (res.data) {
+                set({ user: res.data })
             } else {
                 set({ user: null })
             }
-        } catch (err: any) {
+        } catch (err) {
             console.error("Failed to fetch user:", err)
             set({ user: null })
         }
@@ -53,7 +53,7 @@ export const useUserStore = create<UserStore>((set) => ({
             } else {
                 set({ repos: [] })
             }
-        } catch (err: any) {
+        } catch (err) {
             console.error("Failed to fetch user repos:", err)
             set({ repos: [] })
         } finally {

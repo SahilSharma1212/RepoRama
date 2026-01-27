@@ -41,28 +41,6 @@ export async function POST(req: NextRequest) {
             // Insert new user with GitHub data
             const { data, error: insertError } = await supabase.from("user").insert({
                 github_login: githubData.login,
-                github_id: githubData.id,
-                github_node_id: githubData.node_id,
-                github_type: githubData.type,
-                github_avatar_url: githubData.avatar_url,
-                github_profile_url: githubData.html_url,
-                github_name: githubData.name,
-                github_company: githubData.company,
-                github_blog: githubData.blog,
-                github_location: githubData.location,
-                github_bio: githubData.bio,
-                github_email: githubData.email,
-                github_twitter_username: githubData.twitter_username,
-                github_site_admin: githubData.site_admin,
-                github_public_repos: githubData.public_repos,
-                github_public_gists: githubData.public_gists,
-                github_followers: githubData.followers,
-                github_following: githubData.following,
-                github_created_at: githubData.created_at,
-                github_updated_at: githubData.updated_at,
-                github_followers_url: githubData.followers_url,
-                github_following_url: githubData.following_url,
-                github_repos_url: githubData.repos_url,
                 clerk_user_id: userId,
             }).select().single();
 
