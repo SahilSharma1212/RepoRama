@@ -28,11 +28,11 @@ export default function TopBar() {
     const handleSelectNode = (item: GitHubTreeItem) => {
         // Try to find the actual TreeNode from treeData
         let node: TreeNode | null = null;
-        
+
         if (treeData) {
             node = findTreeNodeByPath(treeData, item.path);
         }
-        
+
         // Fallback: if not found, create a new TreeNode (for files, this is fine)
         if (!node) {
             node = {
@@ -52,16 +52,16 @@ export default function TopBar() {
     return (
         <div className="absolute top-0 z-40 w-full flex flex-col items-center pt-4">
             {/* Search box */}
-            <div className="relative w-100 max-w-[90%] bg-white/15 px-4 py-2 backdrop-blur-3xl rounded-md flex items-center gap-3">
+            <div className="relative w-100 max-w-[90%] md:w-100 md:max-w-md bg-white/15 px-3 py-2 md:px-4 backdrop-blur-3xl rounded-md flex items-center gap-2 md:gap-3 transition-all duration-300 z-40">
                 <input
                     placeholder='Type "/" to search'
                     value={inputVal}
-                    className="w-full placeholder-white/50 text-white bg-transparent outline-none focus:outline-none"
+                    className="w-full placeholder-white/50 text-white bg-transparent outline-none focus:outline-none text-sm md:text-base"
                     onChange={(e) => handleSearch(e.target.value)}
                     onFocus={() => inputVal && setShowDropdown(true)}
                     onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // allow click
                 />
-                <Search className="text-white/50" />
+                <Search className="text-white/50 w-4 h-4 md:w-5 md:h-5" />
             </div>
 
             {/* Dropdown results */}
@@ -73,7 +73,7 @@ export default function TopBar() {
                             className="w-full text-left px-4 py-2 hover:bg-gray-500/30 text-white text-sm transition flex gap-1"
                             onClick={() => handleSelectNode(item)}
                         >
-                            {item.type === 'tree' ? <Folder/> : <File/>} {item.path}
+                            {item.type === 'tree' ? <Folder /> : <File />} {item.path}
                         </button>
                     ))}
                 </div>

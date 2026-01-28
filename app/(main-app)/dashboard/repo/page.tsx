@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from "react"
-import { Star, GitFork, Eye, Calendar, Code, Users, GitBranch, AlertCircle, GitCommit, User, Github, ChevronDown, File, Folder } from "lucide-react"
+import { Star, GitFork, Eye, Calendar, Code, Users, GitBranch, AlertCircle, GitCommit, User, Github, ChevronDown, File, Folder, EyeIcon } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import type { RepoData, LanguageData, Contributor, Commit, Branch, TreeItem } from "@/app/types"
 import Link from "next/link"
@@ -61,7 +61,7 @@ function DashboardSkeleton() {
                     <div className="space-y-2">
                         {[1, 2, 3, 4, 5, 6].map((i) => (
                             <div key={i} className="flex items-center gap-3 p-3">
-                                <div className="w-5 h-5 bg-gray-700 rounded flex-shrink-0" />
+                                <div className="w-5 h-5 bg-gray-700 rounded shrink-0" />
                                 <div className="h-4 flex-1 bg-gray-700 rounded" />
                                 <div className="h-3 w-16 bg-gray-700 rounded" />
                             </div>
@@ -280,72 +280,62 @@ function GitHubDashboardContent() {
         <div className="min-h-screen text-white p-8">
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
-                <div className="flex items-start justify-between gap-6 rounded-2xl border border-white/10 bg-linear-to-br from-[#1f1f1f] to-[#141414] p-6 shadow-lg">
+                <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-white/10 bg-linear-to-br from-[#1f1f1f] to-[#141414] p-6 shadow-lg">
                     <div className="flex items-center gap-4 max-md:flex-col max-md:items-start">
-                        {repoData.owner?.avatar_url && (
-                            <img
-                                src={repoData.owner.avatar_url}
-                                alt={repoData.owner.login}
-                                className="w-20 h-20 rounded-xl border border-white/10 shadow-md max-md:w-16 max-md:h-16"
-                            />
-                        )}
+                        <div className="flex items-center gap-2">
 
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-4 max-md:flex-col max-md:items-start">
-                                <h1 className="text-3xl font-semibold tracking-tight max-md:text-2xl">
-                                    {repoData.name}
-                                </h1>
-
-                                {/* Action buttons next to repo name */}
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => console.log("Visualize clicked")}
-                                        className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white text-black hover:bg-gray-200 transition"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            strokeWidth={2}
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M11 17a4 4 0 100-8 4 4 0 000 8zm0 0v4m0-4h4m-4 0H7"
-                                            />
-                                        </svg>
-                                        <span className="text-xs font-medium">Visualize</span>
-                                    </button>
-                                    <Link
-                                        href={repoData.html_url || "#"}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white/5 text-white/80 hover:bg-white/10 transition"
-                                    >
-                                        <Github className="w-4 h-4" />
-                                        <span className="text-xs font-medium">View</span>
-                                    </Link>
-
-                                    <Link
-                                        href={`${repoData.html_url}/stargazers`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-1 px-3 py-2 rounded-lg bg-yellow-500/5 text-yellow-500 border border-amber-500/30 hover:bg-yellow-500/10 transition"
-                                    >
-                                        <Star className="w-4 h-4" />
-                                        <span className="text-xs font-medium">Star this repo</span>
-                                    </Link>
-                                </div>
-                            </div>
-
-                            <p className="text-sm text-white/50">{repoData.full_name}</p>
-                            {repoData.description && (
-                                <p className="text-white/70 text-xs max-md:hidden">{repoData.description}</p>
+                            {repoData.owner?.avatar_url && (
+                                <img
+                                    src={repoData.owner.avatar_url}
+                                    alt={repoData.owner.login}
+                                    className="w-20 h-20 rounded-xl border border-white/10 shadow-md max-md:w-16 max-md:h-16"
+                                />
                             )}
+
+                            <div className="ml-3 flex flex-col gap-2 md:flex-row">
+                                <Link
+                                    href={repoData.html_url || "#"}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 text-white/80 hover:bg-white/10 transition border border-white/20 md:p-5"
+                                >
+                                    <Github className="w-4 h-4" />
+                                    <span className="text-normal font-medium">View</span>
+                                </Link>
+
+                                <Link
+                                    href={`${repoData.html_url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-yellow-500/5 text-yellow-500 border border-amber-500/30 hover:bg-yellow-500/10 transition md:p-5"
+                                >
+                                    <Star className="w-4 h-4" />
+                                    <span className="text-normal font-medium ">Add <span className="max-md:hidden">Star</span>  </span>
+                                </Link>
+                            </div>
                         </div>
                     </div>
+
+                    <div className="flex gap-2">
+                        <div className="flex flex-col gap-2">
+                            <h1 className="text-3xl font-semibold tracking-tight max-md:text-2xl">
+                                {repoData.name}
+                            </h1>
+                            <p className="text-sm text-white/50">{repoData.full_name}</p>
+                        </div>
+
+                        <div className="w-0.5 self-stretch rounded-full bg-white" />
+
+                        {repoData.description && (
+                            <div className="flex flex-col gap-2">
+                                <h2 className="text-xl font-semibold tracking-tight max-md:text-xl">Description</h2>
+                                <p className="text-white/70 text-xs max-md:hidden">
+                                    {repoData.description}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
                 </div>
 
 
@@ -357,6 +347,22 @@ function GitHubDashboardContent() {
                 }} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    {/* Star Repository */}
+                    <Link
+                        href={`/dashboard/repo/visualiser`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative bg-linear-to-br from-pink-600/20 to-pink-800/20 backdrop-blur rounded-xl p-4 border border-pink-500/30 hover:border-pink-400/50 transition-all hover:shadow-lg hover:shadow-pink-500/20"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-pink-500/20 rounded-lg group-hover:bg-pink-500/30 transition-colors">
+                                <EyeIcon className="w-5 h-5 text-pink-400" />
+                            </div>
+                            <h3 className="font-semibold text-white">Visualize Playground</h3>
+                        </div>
+                    </Link>
+
                     {/* Follow User */}
                     <Link
                         href={`https://github.com/${repoData.owner?.login}`}
@@ -372,20 +378,6 @@ function GitHubDashboardContent() {
                         </div>
                     </Link>
 
-                    {/* Star Repository */}
-                    <Link
-                        href={`${repoData.html_url}/stargazers`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative bg-linear-to-br from-yellow-600/20 to-yellow-800/20 backdrop-blur rounded-xl p-4 border border-yellow-500/30 hover:border-yellow-400/50 transition-all hover:shadow-lg hover:shadow-yellow-500/20"
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-yellow-500/20 rounded-lg group-hover:bg-yellow-500/30 transition-colors">
-                                <Star className="w-5 h-5 text-yellow-400" />
-                            </div>
-                            <h3 className="font-semibold text-white">Star Repository</h3>
-                        </div>
-                    </Link>
 
                     {/* Branch Selector */}
                     <div className="relative">
@@ -741,7 +733,7 @@ function GitHubDashboardContent() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

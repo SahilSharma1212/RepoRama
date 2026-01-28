@@ -67,7 +67,7 @@ export default function RightInfoSideBar() {
         <div className={`
     h-screen flex flex-col border-l border-white/10
     bg-[#222]/80 backdrop-blur-3xl
-    transition-[width,padding] duration-300 ease-out
+    transition-[width,padding] duration-300 ease-out max-md:hidden
     ${isRightBarHidden ? 'w-0 p-0 overflow-hidden' : 'w-130'}
 `}>
             {/* Header */}

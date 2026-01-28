@@ -10,10 +10,11 @@ import RightInfoSideBar from '../../../components/RightInfoSideBar'
 import useUIStore from "@/app/store/uiStore";
 import { ListTree } from "lucide-react";
 import RightSideAnimatedMiniBar from "@/components/RightSideAnimatedMiniBar";
+
 export default function Page() {
     const { treeData, loading, error, fetchTree } = useDataStore();
-
     const { isLeftBarHidden, toggleLeftBarVisibility, toggleRightBarVisibility, isRightBarHidden } = useUIStore();
+
     useEffect(() => {
         fetchTree();
     }, [fetchTree]);
@@ -23,33 +24,39 @@ export default function Page() {
 
     return (
         <div className="flex w-screen h-screen overflow-hidden">
-            {/* Code structure to be displayed */}
             {/* Folder tree sidebar */}
             <LeftFolderStructSideBar />
-            {isLeftBarHidden &&
-                (<div className="absolute top-5 left-5 z-50 bg-[#222] text-white p-2 rounded hover:bg-[#333]"
+
+            {/* Left sidebar toggle button */}
+            {isLeftBarHidden && (
+                <button
+                    className="fixed top-5 left-5 md:top-5 max-md:top-auto max-md:bottom-5 z-50 bg-[#222] text-white p-2 rounded hover:bg-[#333] transition-colors"
                     onClick={toggleLeftBarVisibility}
                     title="Show Directory Tree"
+                    aria-label="Show Directory Tree"
                 >
                     <ListTree strokeWidth={1.5} size={20} className="text-gray-300" />
-                </div>
-                )
-            }
+                </button>
+            )}
+
             <div className="relative flex-1 h-full">
-                {/* flex-1 fills remaining width */}
                 <TopBar />
                 {treeData && <VisGraph treeData={treeData} />}
             </div>
+
             <RightInfoSideBar />
-            {isRightBarHidden &&
-                (<div className="absolute top-5 right-5 z-50 bg-[#222] text-white p-2 rounded hover:bg-[#333]"
+
+            {/* Right sidebar toggle button */}
+            {isRightBarHidden && (
+                <button
+                    className="fixed top-5 right-5 md:top-5 max-md:top-auto max-md:bottom-5 z-50 bg-[#222] text-white p-2 rounded hover:bg-[#333] transition-colors"
                     onClick={toggleRightBarVisibility}
-                    title="Show Directory Tree"
+                    title="Show Info Panel"
+                    aria-label="Show Info Panel"
                 >
                     <RightSideAnimatedMiniBar />
-                </div>
-                )
-            }
+                </button>
+            )}
         </div>
     );
 }
