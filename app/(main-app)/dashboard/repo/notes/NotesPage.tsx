@@ -3,13 +3,12 @@ import { ChevronDown, Notebook, Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 
-export default function page() {
+export default function Page() {
     const searchParams = useSearchParams()
     const repoOwner = searchParams.get('repoOwner')
     const repoName = searchParams.get('repoName')
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState("content")
-
     return (
         <div className='text-white'>
             <nav className='px-4 py-4 border-b border-white/10 flex items-end justify-start gap-3'>
