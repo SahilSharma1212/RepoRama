@@ -1,4 +1,3 @@
-'use client'
 import { Suspense } from "react"
 import NotesPage from "./NotesPage"
 
@@ -9,4 +8,3 @@ export default function Page() {
         </Suspense>
     )
 }
-
