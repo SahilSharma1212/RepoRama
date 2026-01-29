@@ -2,25 +2,74 @@
 
 import { useEffect } from "react";
 import VisGraph from "@/components/TreeNetwork";
-import { NetworkSkeleton } from "../../../components/NetworkSkeleton";
+import { NetworkSkeleton } from "@/components/NetworkSkeleton";
 import TopBar from "./TopBar";
 import { useDataStore } from "@/app/store/dataStore";
-import LeftFolderStructSideBar from "../../../components/LeftFolderStructSideBar";
-import RightInfoSideBar from '../../../components/RightInfoSideBar'
+import LeftFolderStructSideBar from "@/components/LeftFolderStructSideBar";
+import RightInfoSideBar from '@/components/RightInfoSideBar'
 import useUIStore from "@/app/store/uiStore";
 import { ListTree } from "lucide-react";
 import RightSideAnimatedMiniBar from "@/components/RightSideAnimatedMiniBar";
+import Link from "next/link";
 
 export default function Page() {
-    const { treeData, loading, error, fetchTree } = useDataStore();
+    const repoOwner = 'SahilSharma1212';
+    const repoName = 'RepoRama';
+
+    const { treeData, loading, error, fetchTree, fetchBranches, setRepoInfo } = useDataStore();
     const { isLeftBarHidden, toggleLeftBarVisibility, toggleRightBarVisibility, isRightBarHidden } = useUIStore();
 
     useEffect(() => {
-        fetchTree();
-    }, [fetchTree]);
+        if (repoOwner && repoName) {
+            setRepoInfo({ owner: repoOwner, name: repoName });
+            fetchTree(repoOwner, repoName);
+            fetchBranches(repoOwner, repoName);
+        }
+    }, [repoOwner, repoName, fetchTree, fetchBranches, setRepoInfo]);
+
+    if (!repoOwner || !repoName) {
+        return (
+            <div className="flex w-screen h-screen items-center justify-center bg-[#111] text-white">
+                <div className="text-center">
+                    <h1 className="text-2xl mb-2">Missing Repository Information</h1>
+                    <p className="text-gray-400">Please provide repoOwner and repoName in the URL</p>
+                </div>
+            </div>
+        );
+    }
 
     if (loading) return <NetworkSkeleton />;
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (error) return <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-950">
+
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-transparent to-purple-500/10" />
+
+        {/* Subtle dotted grid */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-size-[24px_24px]" />
+
+        {/* Content */}
+        <div className="h-screen max-md:hidden w-1/5 bg-[#222]">
+
+        </div>
+        <div className="h-screen max-md:w-full w-3/5 flex items-center justify-center">
+            <div className="relative z-10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-10 py-8 text-center shadow-2xl max-sm:scale-75">
+                <span className="text-xs tracking-widest uppercase text-white/40">
+                    Something went wrong
+                </span>
+
+                <h1 className="mt-2 text-4xl font-semibold text-white">
+                    Error: {error}
+                </h1>
+
+                <button className="mt-5 bg-white/10 border border-white/20 px-4 py-2 rounded text-sm text-white/50 hover:bg-white/20 hover:text-white transition-all duration-200">
+                    <Link href={'/dashboard'}>
+                        Return to dashboard
+                    </Link>
+                </button>
+            </div></div>
+        <div className="h-screen max-md:hidden w-1/5 bg-[#222]"></div>
+
+    </div>;
 
     return (
         <div className="flex w-screen h-screen overflow-hidden">
