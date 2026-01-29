@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import type { GitHubTreeItem, TreeNode } from "../types";
+import type { GitHubTreeItem, TreeNode, Branch } from "../types";
 import { fetchGitHubTree } from "../_utils/treeAndNodeUtils/fetchGithubTree";
+import { fetchGitHubBranches } from "../_utils/treeAndNodeUtils/fetchBranches";
 import { structureGitHubTree } from "../_utils/structureGithubTree";
 
 interface Owner {
@@ -28,12 +29,17 @@ interface RepoStats {
     default_branch: string;
 }
 
+interface RepoInfo {
+    owner: string;
+    name: string;
+}
+
 interface DataStore {
     flatTree: GitHubTreeItem[] | null;
     treeData: TreeNode[] | null;
     loading: boolean;
     error: string | null;
-    fetchTree: () => Promise<void>;
+    fetchTree: (owner: string, repo: string, branch?: string) => Promise<void>;
     searchVal: string;
     searchResults: GitHubTreeItem[];
     setSearchVal: (val: string) => void;
@@ -46,6 +52,17 @@ interface DataStore {
 
     repoStats: RepoStats | null;
     setRepoStats: (data: RepoStats) => void;
+
+    // Branch related state
+    branches: Branch[];
+    currentBranch: string;
+    branchesLoading: boolean;
+    fetchBranches: (owner: string, repo: string) => Promise<void>;
+    setCurrentBranch: (branch: string) => void;
+
+    // Current repo info
+    repoInfo: RepoInfo | null;
+    setRepoInfo: (info: RepoInfo) => void;
 }
 
 export const useDataStore = create<DataStore>((set, get) => ({
@@ -56,15 +73,25 @@ export const useDataStore = create<DataStore>((set, get) => ({
     searchVal: "",
     searchResults: [],
 
-    fetchTree: async () => {
+    // Branch state
+    branches: [],
+    currentBranch: "main",
+    branchesLoading: false,
+
+    // Repo info
+    repoInfo: null,
+
+    fetchTree: async (owner: string, repo: string, branch?: string) => {
+        const branchToUse = branch || get().currentBranch || "main";
         set({ loading: true, error: null });
         try {
-            const flatTree = await fetchGitHubTree();
+            const flatTree = await fetchGitHubTree(owner, repo, branchToUse);
             const structuredTree = structureGitHubTree(flatTree);
 
             set({
                 flatTree,
                 treeData: structuredTree,
+                currentBranch: branchToUse,
             });
         } catch (error) {
             set({
@@ -74,6 +101,23 @@ export const useDataStore = create<DataStore>((set, get) => ({
             set({ loading: false });
         }
     },
+
+    fetchBranches: async (owner: string, repo: string) => {
+        set({ branchesLoading: true });
+        try {
+            const branches = await fetchGitHubBranches(owner, repo);
+            set({ branches });
+        } catch (error) {
+            console.error("Error fetching branches:", error);
+            set({ branches: [] });
+        } finally {
+            set({ branchesLoading: false });
+        }
+    },
+
+    setCurrentBranch: (branch: string) => set({ currentBranch: branch }),
+
+    setRepoInfo: (info: RepoInfo) => set({ repoInfo: info }),
 
     setSearchVal: (val: string) => set({ searchVal: val }),
 
@@ -106,3 +150,4 @@ export const useDataStore = create<DataStore>((set, get) => ({
     repoStats: null,
     setRepoStats: (data) => set({ repoStats: data }),
 }));
+

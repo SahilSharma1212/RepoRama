@@ -4,10 +4,14 @@ import type { GitHubTreeResponse, GitHubTreeItem } from "../../types";
 /**
  * Fetch GitHub repository tree as a flat array
  */
-export async function fetchGitHubTree(): Promise<GitHubTreeItem[]> {
+export async function fetchGitHubTree(
+    owner: string,
+    repo: string,
+    branch: string = "main"
+): Promise<GitHubTreeItem[]> {
     try {
         const response = await axios.get<GitHubTreeResponse>(
-            "https://api.github.com/repos/burakorkmez/chatify/git/trees/master?recursive=1"
+            `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`
         );
         return response.data.tree;
     } catch (error) {

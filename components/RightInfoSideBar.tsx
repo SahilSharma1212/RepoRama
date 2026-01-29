@@ -68,7 +68,7 @@ export default function RightInfoSideBar() {
     h-screen flex flex-col border-l border-white/10
     bg-[#222]/80 backdrop-blur-3xl
     transition-[width,padding] duration-300 ease-out max-md:hidden
-    ${isRightBarHidden ? 'w-0 p-0 overflow-hidden' : 'w-130'}
+    ${isRightBarHidden ? 'w-0 p-0 overflow-hidden' : 'max-lg:w-90 lg:w-130'}
 `}>
             {/* Header */}
             <div className="flex justify-between items-center px-4 py-3 border-b border-white/10 text-base max-md:px-3 max-md:py-2">
@@ -112,11 +112,11 @@ export default function RightInfoSideBar() {
                 )}
 
                 {selectedNode && error && (
-                    <div className="text-red-500 flex flex-col gap-2">
+                    <div className="text-red-400 flex flex-col h-full items-center justify-center gap-4 p-4">
                         <p>{error}</p>
                         <button
                             onClick={() => fetchContent(selectedNode.url)}
-                            className="text-blue-400 hover:underline"
+                            className="text-blue-400 border border-blue-400 px-2 py-1 rounded hover:underline"
                         >
                             Retry
                         </button>
@@ -207,6 +207,18 @@ export default function RightInfoSideBar() {
                 </button>
 
                 <button
+                    onClick={() => setActiveTab('notes')}
+                    className={`flex-1 py-3 text-sm font-medium transition
+            ${activeTab === 'notes'
+                            ? 'text-white border-b-2 border-slate-500'
+                            : 'text-gray-400 hover:text-gray-300'}`}
+                >
+                    <div className="flex justify-center items-center gap-2">
+                        <Plus size={16} /> Notes
+                    </div>
+                </button>
+
+                <button
                     onClick={() => setActiveTab('summary')}
                     className={`flex-1 py-3 text-sm font-medium transition
         ${activeTab === 'summary'
@@ -218,17 +230,6 @@ export default function RightInfoSideBar() {
                     </div>
                 </button>
 
-                <button
-                    onClick={() => setActiveTab('notes')}
-                    className={`flex-1 py-3 text-sm font-medium transition
-        ${activeTab === 'notes'
-                            ? 'text-white border-b-2 border-slate-500'
-                            : 'text-gray-400 hover:text-gray-300'}`}
-                >
-                    <div className="flex justify-center items-center gap-2">
-                        <Plus size={16} /> Notes
-                    </div>
-                </button>
             </div>
 
         </div>

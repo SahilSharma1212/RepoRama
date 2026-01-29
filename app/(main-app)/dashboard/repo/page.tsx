@@ -1,11 +1,13 @@
 'use client'
 
 import { Suspense, useEffect, useState } from "react"
-import { Star, GitFork, Eye, Calendar, Code, Users, GitBranch, AlertCircle, GitCommit, User, Github, ChevronDown, File, Folder, EyeIcon } from "lucide-react"
+import { Star, GitFork, Eye, Calendar, Code, Users, GitBranch, AlertCircle, GitCommit, User, Github, ChevronDown, File, Folder, EyeIcon, Notebook } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import type { RepoData, LanguageData, Contributor, Commit, Branch, TreeItem } from "@/app/types"
 import Link from "next/link"
 import toast, { Toaster } from "react-hot-toast"
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
+import BranchNetworkGraph from "./BranchNetworkGraph"
 
 function DashboardSkeleton() {
     return (
@@ -281,7 +283,7 @@ function GitHubDashboardContent() {
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header */}
                 <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-white/10 bg-linear-to-br from-[#1f1f1f] to-[#141414] p-6 shadow-lg">
-                    <div className="flex items-center gap-4 max-md:flex-col max-md:items-start">
+                    <div className="flex items-center gap-4 max-md:flex-col max-md:items-start w-full justify-between">
                         <div className="flex items-center gap-2">
 
                             {repoData.owner?.avatar_url && (
@@ -291,49 +293,85 @@ function GitHubDashboardContent() {
                                     className="w-20 h-20 rounded-xl border border-white/10 shadow-md max-md:w-16 max-md:h-16"
                                 />
                             )}
-
-                            <div className="ml-3 flex flex-col gap-2 md:flex-row">
-                                <Link
-                                    href={repoData.html_url || "#"}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 text-white/80 hover:bg-white/10 transition border border-white/20 md:p-5"
-                                >
-                                    <Github className="w-4 h-4" />
-                                    <span className="text-normal font-medium">View</span>
-                                </Link>
-
-                                <Link
-                                    href={`${repoData.html_url}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1 px-2 py-1 rounded-lg bg-yellow-500/5 text-yellow-500 border border-amber-500/30 hover:bg-yellow-500/10 transition md:p-5"
-                                >
-                                    <Star className="w-4 h-4" />
-                                    <span className="text-normal font-medium ">Add <span className="max-md:hidden">Star</span>  </span>
-                                </Link>
+                            <div className="flex flex-col gap-2 mr-2 overflow-hidden">
+                                <h1 className="text-2xl font-semibold tracking-tight max-md:text-2xl wrap-break-words">
+                                    {repoData.name}
+                                </h1>
+                                <p className="text-sm text-white/50 wrap-break-words overflow-hidden">{repoData.full_name}</p>
                             </div>
+
+                            <div className="w-0.5 self-stretch rounded-full max-md:hidden bg-white" />
+                            <div className="flex flex-col ml-3 gap-2 max-md:hidden">
+                                <h2 className="text-xl font-semibold tracking-tight max-md:text-xl">Description</h2>
+
+                                {repoData.description ? (
+
+                                    <p className="text-white/70 text-xs max-md:hidden">
+                                        {repoData.description}
+                                    </p>
+                                ) : <p className="text-white/40 text-xs max-md:hidden">
+                                    ---- No description available ----
+                                </p>}
+                            </div>
+
                         </div>
                     </div>
 
-                    <div className="flex gap-2">
-                        <div className="flex flex-col gap-2">
-                            <h1 className="text-3xl font-semibold tracking-tight max-md:text-2xl">
-                                {repoData.name}
-                            </h1>
-                            <p className="text-sm text-white/50">{repoData.full_name}</p>
+                    <div className="flex gap-2 max-sm:justify-between">
+                        <div className="ml-3 flex flex-col gap-2 sm:flex-row">
+                            <Link
+                                href={repoData.html_url || "#"}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 text-white/80 hover:bg-white/10 transition border border-white/20 md:p-3"
+                            >
+                                <Github className="w-4 h-4" />
+                                <span className="text-normal font-medium">View</span>
+                            </Link>
+
+                            <Link
+                                href={`${repoData.html_url}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 px-2 py-1 rounded-lg bg-yellow-500/5 text-yellow-500 border border-amber-500/30 hover:bg-yellow-500/10 transition md:p-3"
+                            >
+                                <Star className="w-4 h-4" />
+                                <span className="text-normal font-medium ">Add <span className="max-sm:hidden">Star</span>  </span>
+                            </Link>
                         </div>
+                        <div className="flex flex-col gap-2 sm:flex-row">
 
-                        <div className="w-0.5 self-stretch rounded-full bg-white" />
-
-                        {repoData.description && (
-                            <div className="flex flex-col gap-2">
-                                <h2 className="text-xl font-semibold tracking-tight max-md:text-xl">Description</h2>
-                                <p className="text-white/70 text-xs max-md:hidden">
-                                    {repoData.description}
-                                </p>
-                            </div>
-                        )}
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <button className="flex items-center gap-1 px-2 py-1 rounded-lg bg-purple-300/5 text-purple-300 border border-purple-300/20 hover:bg-purple-300/10 transition md:p-3 cursor-pointer">
+                                        <GitBranch className="w-4 h-4" />
+                                        <span className="text-normal font-medium max-sm:hidden">View</span>
+                                        <span className="text-normal font-medium">Branches</span>
+                                    </button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-5xl w-[90vw] h-[80vh] bg-[#1a1a1a] border-white/10 text-white p-0 overflow-hidden">
+                                    <div className="p-6 h-full flex flex-col">
+                                        <DialogTitle className="text-xl font-bold mb-4">Branch Structure Visualization</DialogTitle>
+                                        <div className="flex-1 min-h-0">
+                                            <BranchNetworkGraph
+                                                repoOwner={REPO_OWNER || ""}
+                                                repoName={REPO_NAME || ""}
+                                                className="h-full border-none bg-black/20"
+                                            />
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                            <Link
+                                href={`/dashboard/repo/notes?repoOwner=${repoData.owner?.login}&repoName=${repoData.name}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-300/5 text-blue-300 border border-blue-300/20 hover:bg-blue-300/10 transition md:p-3"
+                            >
+                                <Notebook className="w-4 h-4" />
+                                <span className="text-normal font-medium">Notes</span>
+                            </Link>
+                        </div>
                     </div>
 
                 </div>
@@ -350,7 +388,7 @@ function GitHubDashboardContent() {
 
                     {/* Star Repository */}
                     <Link
-                        href={`/dashboard/repo/visualiser`}
+                        href={`/dashboard/repo/visualiser?repoOwner=${repoData.owner?.login}&repoName=${repoData.name}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative bg-linear-to-br from-pink-600/20 to-pink-800/20 backdrop-blur rounded-xl p-4 border border-pink-500/30 hover:border-pink-400/50 transition-all hover:shadow-lg hover:shadow-pink-500/20"
@@ -359,7 +397,7 @@ function GitHubDashboardContent() {
                             <div className="p-2 bg-pink-500/20 rounded-lg group-hover:bg-pink-500/30 transition-colors">
                                 <EyeIcon className="w-5 h-5 text-pink-400" />
                             </div>
-                            <h3 className="font-semibold text-white">Visualize Playground</h3>
+                            <h3 className="font-semibold text-white">Visualizer Playground</h3>
                         </div>
                     </Link>
 
@@ -368,7 +406,7 @@ function GitHubDashboardContent() {
                         href={`https://github.com/${repoData.owner?.login}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative bg-linear-to-br from-purple-600/20 to-purple-800/20 backdrop-blur rounded-xl p-4 border border-purple-500/30 hover:border-purple-400/50 transition-all hover:shadow-lg hover:shadow-purple-500/20"
+                        className="group relative bg-[#222] backdrop-blur rounded-xl p-4 border border-purple-500/30 hover:border-purple-400/50 transition-all hover:shadow-lg hover:shadow-purple-500/20"
                     >
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors">
@@ -383,7 +421,7 @@ function GitHubDashboardContent() {
                     <div className="relative">
                         <button
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            className="w-full group relative bg-linear-to-br from-green-600/20 to-green-800/20 backdrop-blur rounded-xl p-4 border border-green-500/30 hover:border-green-400/50 transition-all hover:shadow-lg hover:shadow-green-500/20 text-left"
+                            className="w-full group relative bg-[#222] backdrop-blur rounded-xl p-4 border border-green-500/30 hover:border-green-400/50 transition-all hover:shadow-lg hover:shadow-green-500/20 text-left"
                         >
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-3">
@@ -436,7 +474,7 @@ function GitHubDashboardContent() {
                             navigator.clipboard.writeText("git clone " + cloneUrl)
                             toast.success("Copied clone command!")
                         }}
-                        className="group relative bg-linear-to-br from-blue-600/20 to-blue-800/20 backdrop-blur rounded-xl p-4 border border-blue-500/30 hover:border-blue-400/50 transition-all hover:shadow-lg hover:shadow-blue-500/20 text-left"
+                        className="group relative bg-[#222] backdrop-blur rounded-xl p-4 border border-blue-500/30 hover:border-blue-400/50 transition-all hover:shadow-lg hover:shadow-blue-500/20 text-left"
                     >
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
@@ -497,9 +535,9 @@ function GitHubDashboardContent() {
                             href={`${repoData.html_url}/tree/${selectedBranch}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                            className="text-sm text-blue-400 hover:text-blue-300 transition-colors border border-blue-500 hover:bg-blue-500/10 p-2 rounded"
                         >
-                            View on GitHub →
+                            <Github />
                         </a>
                     </div>
 
@@ -709,11 +747,11 @@ function GitHubDashboardContent() {
                                                 {truncateMessage(commit.commit.message)}
                                             </div>
                                             <div className="flex items-center gap-4 text-sm text-gray-400">
-                                                <span className="flex items-center gap-1">
+                                                <span className="flex items-center gap-1 max-md:hidden">
                                                     {commit.commit.author.name}
                                                 </span>
-                                                <span>•</span>
-                                                <span>{formatRelativeTime(commit.commit.author.date)}</span>
+                                                <span className="max-md:hidden">•</span>
+                                                <span className="max-sm:text-xs">{formatRelativeTime(commit.commit.author.date)}</span>
                                                 <span>•</span>
                                                 <span className="font-mono text-xs bg-gray-600/50 px-2 py-1 rounded">
                                                     {commit.sha.substring(0, 7)}

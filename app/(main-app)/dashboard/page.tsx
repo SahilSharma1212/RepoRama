@@ -120,7 +120,12 @@ export default function PostPage() {
 
     return (
         <div>
-            <Toaster reverseOrder={false} />
+            <Toaster reverseOrder={false} toastOptions={{
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                },
+            }} />
 
             {/* NAVBAR */}
             <nav className="flex justify-between items-center px-4 py-4 border-b border-white/10">
@@ -164,7 +169,7 @@ export default function PostPage() {
                             href={`/dashboard/repo?repoOwner=${repo.github_repo_url.split('/').filter(Boolean).slice(-2)[0]}&repoName=${repo.github_repo_url.split('/').filter(Boolean).slice(-2)[1]}`}
                             target="_blank"
                             key={repo.id}
-                            className="flex justify-between bg-[#252525] p-6 rounded-sm border border-transparent hover:border-white/10 hover:shadow-lg hover:shadow-white/5 hover:scale-102 transition"
+                            className="flex justify-between bg-[#333] p-6 rounded-sm border border-transparent hover:border-white/10 hover:shadow-lg hover:shadow-black/35 hover:scale-102 transition group"
                         >
 
                             <div className="overflow-hidden">
@@ -175,14 +180,14 @@ export default function PostPage() {
                                     {repo.description || 'No description'}
                                 </p>
                             </div>
-                            <ArrowRight className="text-gray-500 -rotate-45 hover:rotate-0 transition" />
+                            <ArrowRight className="text-gray-500 -rotate-45  transition group-hover:rotate-0" />
                         </Link>
                     ))}
 
                 {/* ADD CARD */}
                 <div
                     onClick={() => setIsAddRepoOpen(true)}
-                    className="flex items-center justify-center gap-2 bg-[#252525] hover:bg-[#303030] cursor-pointer border border-white/10 p-6 rounded-sm hover:border-white/10 hover:shadow-lg hover:shadow-white/5 hover:scale-102 "
+                    className="flex items-center justify-center gap-2 bg-[#252525] hover:bg-[#303030] cursor-pointer border border-white/10 p-6 rounded-sm hover:border-white/10 hover:shadow-lg hover:shadow-black/35 hover:scale-102 "
                 >
                     <span className="text-gray-400 text-lg font-semibold">Add Repo</span>
                     <Plus className="text-gray-400" />

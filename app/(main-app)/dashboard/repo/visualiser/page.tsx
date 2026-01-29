@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import VisGraph from "@/components/TreeNetwork";
 import { NetworkSkeleton } from "@/components/NetworkSkeleton";
 import TopBar from "../../../visualiser/TopBar";
@@ -12,12 +13,31 @@ import { ListTree } from "lucide-react";
 import RightSideAnimatedMiniBar from "@/components/RightSideAnimatedMiniBar";
 
 export default function Page() {
-    const { treeData, loading, error, fetchTree } = useDataStore();
+    const searchParams = useSearchParams();
+    const repoOwner = searchParams.get('repoOwner');
+    const repoName = searchParams.get('repoName');
+
+    const { treeData, loading, error, fetchTree, fetchBranches, setRepoInfo } = useDataStore();
     const { isLeftBarHidden, toggleLeftBarVisibility, toggleRightBarVisibility, isRightBarHidden } = useUIStore();
 
     useEffect(() => {
-        fetchTree();
-    }, [fetchTree]);
+        if (repoOwner && repoName) {
+            setRepoInfo({ owner: repoOwner, name: repoName });
+            fetchTree(repoOwner, repoName);
+            fetchBranches(repoOwner, repoName);
+        }
+    }, [repoOwner, repoName, fetchTree, fetchBranches, setRepoInfo]);
+
+    if (!repoOwner || !repoName) {
+        return (
+            <div className="flex w-screen h-screen items-center justify-center bg-[#111] text-white">
+                <div className="text-center">
+                    <h1 className="text-2xl mb-2">Missing Repository Information</h1>
+                    <p className="text-gray-400">Please provide repoOwner and repoName in the URL</p>
+                </div>
+            </div>
+        );
+    }
 
     if (loading) return <NetworkSkeleton />;
     if (error) return <div className="text-red-500">{error}</div>;
