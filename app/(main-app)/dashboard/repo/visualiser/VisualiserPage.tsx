@@ -2,32 +2,42 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import VisGraph from "@/components/TreeNetwork";
-import { NetworkSkeleton } from "@/components/NetworkSkeleton";
-import TopBar from "../../../visualiser/TopBar";
+import dynamic from "next/dynamic";
 import { useDataStore } from "@/app/store/dataStore";
-import LeftFolderStructSideBar from "@/components/LeftFolderStructSideBar";
-import RightInfoSideBar from '@/components/RightInfoSideBar'
 import useUIStore from "@/app/store/uiStore";
 import { ListTree } from "lucide-react";
-import RightSideAnimatedMiniBar from "@/components/RightSideAnimatedMiniBar";
 import Link from "next/link";
+
+// Dynamic Imports for Code Splitting
+const VisGraph = dynamic(() => import("@/components/TreeNetwork"), {
+    ssr: false,
+});
+const TopBar = dynamic(() => import("../../../visualiser/TopBar"), { ssr: false });
+const LeftFolderStructSideBar = dynamic(() => import("@/components/LeftFolderStructSideBar"), { ssr: false });
+const RightInfoSideBar = dynamic(() => import('@/components/RightInfoSideBar'), { ssr: false });
+const RightSideAnimatedMiniBar = dynamic(() => import("@/components/RightSideAnimatedMiniBar"), { ssr: false });
 
 export default function VisualiserPage() {
     const searchParams = useSearchParams();
     const repoOwner = searchParams.get('repoOwner');
     const repoName = searchParams.get('repoName');
 
-    const { treeData, loading, error, fetchTree, fetchBranches, setRepoInfo } = useDataStore();
+    const { treeData, loading, error, fetchTree, fetchBranches, setRepoInfo, fetchRepoDetails } = useDataStore();
     const { isLeftBarHidden, toggleLeftBarVisibility, toggleRightBarVisibility, isRightBarHidden } = useUIStore();
 
     useEffect(() => {
-        if (repoOwner && repoName) {
-            setRepoInfo({ owner: repoOwner, name: repoName });
-            fetchTree(repoOwner, repoName);
-            fetchBranches(repoOwner, repoName);
-        }
-    }, [repoOwner, repoName, fetchTree, fetchBranches, setRepoInfo]);
+        const init = async () => {
+            if (repoOwner && repoName) {
+                setRepoInfo({ owner: repoOwner, name: repoName });
+                // Fetch details first to get the default branch
+                await fetchRepoDetails(repoOwner, repoName);
+                // Now fetch tree - it will use the default branch we just fetched
+                fetchTree(repoOwner, repoName);
+                fetchBranches(repoOwner, repoName);
+            }
+        };
+        init();
+    }, [repoOwner, repoName, fetchTree, fetchBranches, setRepoInfo, fetchRepoDetails]);
 
     if (!repoOwner || !repoName) {
         return (
@@ -40,7 +50,6 @@ export default function VisualiserPage() {
         );
     }
 
-    if (loading) return <NetworkSkeleton />;
     if (error) return <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-950">
 
         {/* Background gradient */}

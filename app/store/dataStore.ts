@@ -63,6 +63,7 @@ interface DataStore {
     // Current repo info
     repoInfo: RepoInfo | null;
     setRepoInfo: (info: RepoInfo) => void;
+    fetchRepoDetails: (owner: string, repo: string) => Promise<void>;
 }
 
 export const useDataStore = create<DataStore>((set, get) => ({
@@ -75,14 +76,43 @@ export const useDataStore = create<DataStore>((set, get) => ({
 
     // Branch state
     branches: [],
-    currentBranch: "main",
+    currentBranch: "",
     branchesLoading: false,
 
     // Repo info
     repoInfo: null,
 
+    fetchRepoDetails: async (owner: string, repo: string) => {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+            if (!res.ok) throw new Error("Failed to fetch repo details");
+            const data = await res.json();
+            set({ repoStats: data });
+
+            // Set default branch if currentBranch is empty
+            if (!get().currentBranch) {
+                set({ currentBranch: data.default_branch });
+            }
+        } catch (error) {
+            console.error("Error fetching repo details:", error);
+        }
+    },
+
     fetchTree: async (owner: string, repo: string, branch?: string) => {
-        const branchToUse = branch || get().currentBranch || "main";
+        // Priority: Argument > Current State > Repo Default Buffer > Hard fallback
+        let branchToUse = branch || get().currentBranch;
+
+        if (!branchToUse) {
+            // If we have repo stats, use that default branch
+            const stats = get().repoStats;
+            if (stats?.default_branch) {
+                branchToUse = stats.default_branch;
+            } else {
+                // Fallback if we haven't fetched details yet, though we should have
+                branchToUse = "main";
+            }
+        }
+
         set({ loading: true, error: null });
         try {
             const flatTree = await fetchGitHubTree(owner, repo, branchToUse);

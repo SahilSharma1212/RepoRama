@@ -27,7 +27,9 @@ export default function PostPage() {
     const [githubUsername, setGithubUsername] = useState('')
     const [isLinkingGithub, setIsLinkingGithub] = useState(false)
 
-    /* ------------------ EFFECTS ------------------ */
+    // -----------------------------------------------------------------------
+    // effects
+    // -----------------------------------------------------------------------
 
     useEffect(() => {
         if (!userId) return
@@ -46,7 +48,9 @@ export default function PostPage() {
         loadRepos()
     }, [userId])
 
-    /* ------------------ HELPERS ------------------ */
+    // -----------------------------------------------------------------------
+    // extract github username
+    // -----------------------------------------------------------------------
 
     const extractGithubUsername = (input: string) => {
         try {
@@ -57,7 +61,9 @@ export default function PostPage() {
         }
     }
 
-    /* ------------------ ACTIONS ------------------ */
+    // -----------------------------------------------------------------------
+    // link github
+    // -----------------------------------------------------------------------
 
     const linkGithub = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -86,6 +92,10 @@ export default function PostPage() {
             setIsLinkingGithub(false)
         }
     }
+
+    // -----------------------------------------------------------------------
+    // add repo
+    // -----------------------------------------------------------------------
 
     const addRepo = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -118,6 +128,9 @@ export default function PostPage() {
         }
     }
 
+    // -----------------------------------------------------------------------
+    // delete repo
+    // -----------------------------------------------------------------------
     const deleteRepo = async (repoId: string) => {
         try {
             await axios.delete(`/api/repo?repoId=${repoId}`)

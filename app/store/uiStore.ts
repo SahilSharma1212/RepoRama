@@ -8,7 +8,7 @@ type UIStore = {
 }
 
 const useUIStore = create<UIStore>((set, get) => ({
-    isLeftBarHidden: true,
+    isLeftBarHidden: false,
     toggleLeftBarVisibility: () => {
         const { isLeftBarHidden } = get()
         set({ isLeftBarHidden: !isLeftBarHidden })
