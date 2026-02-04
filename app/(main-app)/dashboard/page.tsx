@@ -3,7 +3,7 @@
 import { useUserStore } from '@/app/store/userStore'
 import { useAuth, UserButton } from '@clerk/nextjs'
 import axios from 'axios'
-import { ArrowRight, Loader2, Plus, User } from 'lucide-react'
+import { ArrowRight, Loader2, Plus, Trash2Icon, User } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast'
 
 export default function PostPage() {
     const { userId } = useAuth()
-    const { user, setUser, fetchUser, repos, fetchUserRepos } = useUserStore()
+    const { user, setUser, fetchUser, repos, fetchUserRepos, setRepos } = useUserStore()
 
     const [isAddRepoOpen, setIsAddRepoOpen] = useState(false)
     const [isGithubLinkOpen, setIsGithubLinkOpen] = useState(false)
@@ -116,6 +116,16 @@ export default function PostPage() {
         }
     }
 
+    const deleteRepo = async (repoId: string) => {
+        try {
+            await axios.delete(`/api/repo/delete?repoId=${repoId}`)
+            toast.success('Repository deleted')
+            setRepos(repos.filter((repo) => repo.id !== repoId))
+        } catch (err) {
+            toast.error('Failed to delete repo')
+        }
+    }
+
     /* ------------------ UI ------------------ */
 
     return (
@@ -180,7 +190,10 @@ export default function PostPage() {
                                     {repo.description || 'No description'}
                                 </p>
                             </div>
-                            <ArrowRight className="text-gray-500 -rotate-45  transition group-hover:rotate-0" />
+                            <div className="flex items-center gap-2">
+                                <Trash2Icon className="text-red-500/50 hover:text-red-500 transition" onClick={(e) => { e.preventDefault(); deleteRepo(repo.id) }} />
+                                <ArrowRight className="text-blue-500/50 -rotate-45 transition group-hover:rotate-0" />
+                            </div>
                         </Link>
                     ))}
 

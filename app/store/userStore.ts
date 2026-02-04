@@ -15,7 +15,8 @@ type UserStore = {
     fetchUser: (userId: string) => Promise<void>
     repos: repoType[]
     fetchUserRepos: (userId: string) => Promise<void>
-    isFetchingRepos: boolean
+    isFetchingRepos: boolean,
+    setRepos: (repos: repoType[]) => void
 }
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -61,4 +62,5 @@ export const useUserStore = create<UserStore>((set) => ({
         }
     },
     repos: [],
+    setRepos: (repos: repoType[]) => set({ repos }),
 }))
