@@ -71,7 +71,9 @@ const chain = promptTemplate.pipe(modelWithStructure);
 // ------------------------------------------------------------------
 export async function summarizeCode(code: string): Promise<CodeSummary> {
     try {
-        return await chain.invoke({ code });
+        const result = await chain.invoke({ code });
+        console.log(result);
+        return result;
     } catch (error) {
         console.error("Error summarizing code:", error);
         throw new Error("Failed to generate code summary");
