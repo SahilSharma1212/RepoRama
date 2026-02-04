@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import VisGraph from "@/components/TreeNetwork";
-import { NetworkSkeleton } from "@/components/NetworkSkeleton";
 import TopBar from "./TopBar";
 import { useDataStore } from "@/app/store/dataStore";
 import LeftFolderStructSideBar from "@/components/LeftFolderStructSideBar";
@@ -38,7 +37,6 @@ export default function Page() {
         );
     }
 
-    if (loading) return <NetworkSkeleton />;
     if (error) return <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-950">
 
         {/* Background gradient */}
