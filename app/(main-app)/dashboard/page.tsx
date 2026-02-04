@@ -109,8 +109,10 @@ export default function PostPage() {
             setRepoDescription('')
             setIsAddRepoOpen(false)
             fetchUserRepos(userId)
-        } catch (err) {
-            toast.error('Failed to add repo')
+        } catch (err: any) {
+            console.error(err);
+            const errorMessage = err.response?.data || 'Failed to add repo';
+            toast.error(errorMessage)
         } finally {
             setIsAddingRepo(false)
         }
@@ -118,7 +120,7 @@ export default function PostPage() {
 
     const deleteRepo = async (repoId: string) => {
         try {
-            await axios.delete(`/api/repo/delete?repoId=${repoId}`)
+            await axios.delete(`/api/repo?repoId=${repoId}`)
             toast.success('Repository deleted')
             setRepos(repos.filter((repo) => repo.id !== repoId))
         } catch (err) {
