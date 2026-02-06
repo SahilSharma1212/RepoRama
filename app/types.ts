@@ -239,3 +239,11 @@ export interface Tree {
     tree: TreeItem[]
     truncated: boolean
 }
+
+export interface CodeSummary {
+    description: string[];
+    keyFeatures: string[];
+    implementationDetails: string[];
+    importantFunctionsUsed: string[];
+    useCases: string[];
+}

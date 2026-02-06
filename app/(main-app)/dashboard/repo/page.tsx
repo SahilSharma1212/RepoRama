@@ -377,13 +377,6 @@ function GitHubDashboardContent() {
                 </div>
 
 
-                <Toaster reverseOrder={false} toastOptions={{
-                    style: {
-                        background: "#1e1e1e",
-                        color: "#fff"
-                    }
-                }} />
-
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
                     {/* Star Repository */}

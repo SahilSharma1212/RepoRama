@@ -4,6 +4,7 @@ import "./globals.css";
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
+import { Toaster } from "react-hot-toast";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,13 +27,19 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#111] selection:bg-[#555] selection:text-white`}
-      >
-        {children}
-      </body>
-    </html>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#111] selection:bg-[#555] selection:text-white text-white`}
+        >
+          {children}
+          <Toaster reverseOrder={false} toastOptions={{
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+          }} />
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

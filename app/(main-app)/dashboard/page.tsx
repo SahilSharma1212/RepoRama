@@ -145,12 +145,6 @@ export default function PostPage() {
 
     return (
         <div>
-            <Toaster reverseOrder={false} toastOptions={{
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                },
-            }} />
 
             {/* NAVBAR */}
             <nav className="flex justify-between items-center px-4 py-4 border-b border-white/10">
