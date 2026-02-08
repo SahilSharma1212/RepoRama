@@ -208,13 +208,14 @@ export default function RightInfoSideBar() {
 
                         {activeTab === 'summary' && (
                             <div>
-                                <p className="text-gray-400 text-sm">
+                                <div className="text-gray-400 bg-gray-950/10 p-1 rounded-md text-sm flex items-center justify-between pl-2">
+                                    <p>path : {selectedNode.path.split('/').pop() || selectedNode.name}</p>
                                     <button
                                         onClick={fetchSummary}
-                                        className='bg-indigo-600 text-white p-2 rounded hover:bg-indigo-600/80 transition-colors flex items-center gap-2 font-semibold'>
+                                        className='bg-blue-600 text-white p-2 rounded hover:bg-blue-600/80 transition-colors flex items-center gap-2 font-semibold selection:bg-blue-900/80 selection:text-white'>
                                         Summarise <WandSparkles size={16} strokeWidth={1.5} />
                                     </button>
-                                </p>
+                                </div>
 
                                 {summaryLoading && (
                                     <section className="mt-3 flex flex-col w-full p-3 gap-3">
@@ -250,9 +251,9 @@ export default function RightInfoSideBar() {
                                         <div className='bg-[#111] p-3 rounded-md'>
                                             {
                                                 summary.description.map((desc, index) => (
-                                                    <div className='flex items-center gap-2'>
+                                                    <div className='flex items-center gap-2' key={index}>
                                                         <div className='w-1 h-1 rounded-full bg-gray-300'></div>
-                                                        <p key={index} className='text-sm text-gray-300 py-1'>{desc}</p>
+                                                        <p className='text-sm text-gray-300 py-1'>{desc}</p>
                                                     </div>
                                                 ))
                                             }
@@ -264,9 +265,9 @@ export default function RightInfoSideBar() {
                                         <div className='bg-[#111] p-3 rounded-md'>
                                             {
                                                 summary.keyFeatures.map((feature, index) => (
-                                                    <div className='flex items-center gap-2'>
+                                                    <div className='flex items-center gap-2' key={index}>
                                                         <div className='w-1 h-1 rounded-full bg-gray-300'></div>
-                                                        <p key={index} className='text-sm text-gray-300 py-1'>{feature}</p>
+                                                        <p className='text-sm text-gray-300 py-1'>{feature}</p>
                                                     </div>
                                                 ))
                                             }
@@ -278,9 +279,9 @@ export default function RightInfoSideBar() {
                                         <div className='bg-[#111] p-3 rounded-md'>
                                             {
                                                 summary.implementationDetails.map((detail, index) => (
-                                                    <div className='flex items-center gap-2'>
+                                                    <div className='flex items-center gap-2' key={index}>
                                                         <div className='w-1 h-1 rounded-full bg-gray-300'></div>
-                                                        <p key={index} className='text-sm text-gray-300 py-1'>{detail}</p>
+                                                        <p className='text-sm text-gray-300 py-1'>{detail}</p>
                                                     </div>
                                                 ))
                                             }
@@ -302,9 +303,9 @@ export default function RightInfoSideBar() {
 
                                             {
                                                 summary.useCases.map((useCase, index) => (
-                                                    <div className='flex items-center gap-2'>
+                                                    <div className='flex items-center gap-2' key={index}>
                                                         <div className='w-1 h-1 rounded-full bg-gray-300'></div>
-                                                        <p key={index} className='text-sm text-gray-300 py-1'>{useCase}</p>
+                                                        <p className='text-sm text-gray-300 py-1'>{useCase}</p>
                                                     </div>
                                                 ))
                                             }
