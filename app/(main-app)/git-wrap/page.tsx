@@ -548,7 +548,7 @@ function FinaleStory({ data }: { data: GitWrappedData }) {
                     <div
                         id="download-btn"
                         onClick={handleDownload}
-                        className='flex items-center justify-center gap-2 border border-white/20 px-4 py-3 rounded-lg hover:bg-white/5 transition-all cursor-pointer'
+                        className='flex items-center justify-center gap-2 border border-white/20 px-4 py-3 rounded-lg hover:bg-white/5 transition-all cursor-pointer z-50'
                     >
                         <Download size={16} className='opacity-80' />
                         <p className='text-xs font-mono uppercase tracking-wider opacity-80'>Download</p>
@@ -557,7 +557,7 @@ function FinaleStory({ data }: { data: GitWrappedData }) {
                     <div
                         id="share-btn"
                         onClick={handleShare}
-                        className='flex items-center justify-center gap-2 border border-white/20 px-4 py-3 rounded-lg hover:bg-white/5 transition-all cursor-pointer'
+                        className='flex items-center justify-center gap-2 border border-white/20 px-4 py-3 rounded-lg hover:bg-white/5 transition-all cursor-pointer z-50'
                     >
                         <Instagram size={16} className='opacity-80' />
                         <p className='text-xs font-mono uppercase tracking-wider opacity-80'>Share</p>
