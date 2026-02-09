@@ -6,7 +6,6 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
-import { Loader2 } from 'lucide-react'
 
 export default function LinkGithubPage() {
     const { userId } = useAuth()
@@ -57,7 +56,7 @@ export default function LinkGithubPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] p-4">
+        <div className="py-10 flex items-center justify-center p-4">
             <div className="max-w-2xl w-full bg-[#1a1a1a] rounded-xl p-6 border border-white/5 shadow-xl">
                 {user && user.login ? (
                     <>

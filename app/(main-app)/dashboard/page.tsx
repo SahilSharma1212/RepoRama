@@ -1,17 +1,16 @@
 'use client'
 
 import { useUserStore } from '@/app/store/userStore'
-import { useAuth, UserButton } from '@clerk/nextjs'
+import { useAuth } from '@clerk/nextjs'
 import axios from 'axios'
 import { ArrowRight, Loader2, Plus, Trash2Icon, User } from 'lucide-react'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 export default function PostPage() {
     const { userId } = useAuth()
-    const { user, setUser, fetchUser, repos, fetchUserRepos, setRepos } = useUserStore()
+    const { setUser, fetchUser, repos, fetchUserRepos, setRepos } = useUserStore()
 
     const [isAddRepoOpen, setIsAddRepoOpen] = useState(false)
     const [isGithubLinkOpen, setIsGithubLinkOpen] = useState(false)
@@ -145,31 +144,6 @@ export default function PostPage() {
 
     return (
         <div>
-
-            {/* NAVBAR */}
-            <nav className="flex justify-between items-center px-4 py-4 border-b border-white/10">
-                <h2 className="text-3xl font-bold text-gray-200">Dashboard</h2>
-
-                <div className="flex items-center gap-3">
-                    {user ? (
-                        <Link href="/dashboard/profile" target='_blank'>
-                            <Image
-                                src={user.avatar_url!}
-                                alt="avatar"
-                                width={28}
-                                height={28}
-                                className="rounded-full border border-white/10"
-                            />
-                        </Link>
-                    ) : (
-                        <User
-                            className="w-5 h-5 text-gray-500 cursor-pointer"
-                            onClick={() => setIsGithubLinkOpen(true)}
-                        />
-                    )}
-                    <UserButton />
-                </div>
-            </nav>
 
             {/* REPOS */}
             <section className="grid grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-5 p-4">

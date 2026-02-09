@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Username required' }, { status: 400 })
         }
 
-        const token = process.env.GITHUB_TOKEN
+        const token = process.env.GITHUB_TOKEN!
         const headers: any = {
             Accept: "application/vnd.github+json",
         }
