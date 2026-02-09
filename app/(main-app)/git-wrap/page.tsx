@@ -1,5 +1,7 @@
 'use client'
-import { Loader2, User, Star, GitCommit, Code, Calendar, GitPullRequest, Flame, TrendingUp, Clock, ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react'
+import { Loader2, User, Star, GitCommit, Code, Calendar, GitPullRequest, Flame, TrendingUp, Clock, ChevronLeft, ChevronRight, Volume2, VolumeX, Instagram, Download } from 'lucide-react'
+import { toPng } from 'html-to-image'
+import Image from 'next/image'
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 
@@ -149,7 +151,7 @@ export default function Page() {
         },
         {
             id: 'finale',
-            intro: "Here's to another year of amazing code!",
+            intro: "CHEERS TO ANOTHER YEAR OF CODE!",
             component: (d) => <FinaleStory data={d} />
         }
     ] : []
@@ -179,11 +181,12 @@ export default function Page() {
 
     if (showStories && data) {
         return (
-            <div className="h-screen bg-[#111] flex items-center justify-center p-4 overflow-hidden">
+            <div className="min-h-screen bg-[#111] flex items-center justify-center p-4">
                 {/* Phone Screen Container */}
-                <div className="relative w-full max-w-md aspect-[9/19] bg-black rounded-none shadow-2xl overflow-hidden border border-[#333]">
-                    {/* Notch */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-black rounded-b-3xl z-50"></div>
+                <div
+                    className="relative w-full max-w-md bg-black rounded-3xl shadow-2xl overflow-hidden border border-[#333]"
+                    style={{ height: 'min(calc(100vh - 2rem), 844px)' }}
+                >
 
                     {/* Progress Bars */}
                     <div className="absolute top-4 left-0 right-0 flex gap-1 px-4 z-40">
@@ -201,23 +204,23 @@ export default function Page() {
                     {/* Mute Button */}
                     <button
                         onClick={toggleMute}
-                        className="absolute top-4 right-4 z-50 bg-black/50 rounded-none p-2 backdrop-blur-sm hover:bg-black/70 transition border border-neutral-700"
+                        className="absolute top-4 right-4 z-50 bg-black/50 rounded-lg p-2 backdrop-blur-sm hover:bg-black/70 transition border border-neutral-700"
                     >
                         {isMuted ? <VolumeX size={18} className="text-white" /> : <Volume2 size={18} className="text-white" />}
                     </button>
 
                     {/* Story Content */}
                     <div className="relative w-full h-full bg-[#1a1a1a]">
-                        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-white">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-white overflow-y-auto">
                             {/* Intro Text */}
-                            <div className="absolute top-20 left-0 right-0 px-8 text-center">
+                            <div className="absolute top-16 left-0 right-0 px-8 text-center">
                                 <p className="text-sm font-mono tracking-wider uppercase opacity-60 animate-fade-in">
                                     {stories[currentStoryIndex].intro}
                                 </p>
                             </div>
 
                             {/* Story Component */}
-                            <div className="w-full h-full flex items-center justify-center animate-scale-in">
+                            <div className="w-full flex items-center justify-center animate-scale-in mt-12">
                                 {stories[currentStoryIndex].component(data)}
                             </div>
                         </div>
@@ -227,7 +230,7 @@ export default function Page() {
                     <button
                         onClick={prevStory}
                         disabled={currentStoryIndex === 0}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 z-40 bg-black/30 backdrop-blur-sm rounded-none p-2 disabled:opacity-20 hover:bg-black/50 transition border border-neutral-700"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 z-40 bg-black/30 backdrop-blur-sm rounded-lg p-2 disabled:opacity-20 hover:bg-black/50 transition border border-neutral-700"
                     >
                         <ChevronLeft size={20} className="text-white" />
                     </button>
@@ -248,29 +251,15 @@ export default function Page() {
                         className="absolute right-0 top-0 bottom-0 w-1/3 z-30 cursor-pointer"
                         onClick={nextStory}
                     ></div>
-
-                    {/* Close Button */}
-                    {currentStoryIndex === stories.length - 1 && (
-                        <button
-                            onClick={() => {
-                                setShowStories(false)
-                                setData(null)
-                                setUsername("")
-                            }}
-                            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 bg-white text-black px-8 py-3 rounded-none font-mono text-sm uppercase tracking-wider hover:bg-neutral-200 transition animate-bounce-in"
-                        >
-                            Start Over
-                        </button>
-                    )}
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="h-screen bg-[#111] text-neutral-100 flex items-center justify-center overflow-hidden">
+        <div className="min-h-screen bg-[#111] text-neutral-100 flex items-center justify-center p-4">
             <div className="w-full max-w-xl px-6">
-                <div className="border border-[#333] rounded-none p-8 bg-[#1a1a1a]">
+                <div className="border border-[#333] rounded-lg p-8 bg-[#1a1a1a]">
                     <h1 className="text-4xl md:text-5xl font-light tracking-tight text-center mb-2 text-white">
                         GIT WRAPPED
                     </h1>
@@ -285,12 +274,12 @@ export default function Page() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && fetchWrappedData()}
-                            className="flex-1 rounded-none bg-[#111] border border-[#333] px-5 py-3 text-sm placeholder-neutral-600 focus:outline-none focus:border-neutral-400 transition font-mono"
+                            className="flex-1 rounded-lg bg-[#111] border border-[#333] px-5 py-3 text-sm placeholder-neutral-600 focus:outline-none focus:border-neutral-400 transition font-mono"
                         />
                         <button
                             onClick={fetchWrappedData}
                             disabled={isLoading}
-                            className="rounded-none bg-white hover:bg-neutral-200 text-black px-8 py-3 font-mono text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 disabled:opacity-40 min-w-[140px]"
+                            className="rounded-lg bg-white hover:bg-neutral-200 text-black px-8 py-3 font-mono text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 disabled:opacity-40 min-w-[140px]"
                         >
                             {isLoading ? <Loader2 className="animate-spin" size={18} /> : 'Unwrap'}
                         </button>
@@ -308,7 +297,7 @@ function WelcomeStory({ data }: { data: GitWrappedData }) {
             <img
                 src={data.avatar_url}
                 alt={data.login}
-                className="w-32 h-32 rounded-none mx-auto border border-neutral-700 shadow-2xl animate-scale-in grayscale"
+                className="w-32 h-32 rounded-lg mx-auto border border-neutral-700 shadow-2xl animate-scale-in grayscale"
             />
             <div>
                 <h2 className="text-3xl font-light tracking-tight mb-2">{data.name || data.login}</h2>
@@ -424,18 +413,156 @@ function BusiestDayStory({ data }: { data: GitWrappedData }) {
 }
 
 function FinaleStory({ data }: { data: GitWrappedData }) {
+    const storyRef = useRef<HTMLDivElement>(null)
+
+    const generateImage = async (): Promise<Blob | null> => {
+        if (!storyRef.current) return null
+
+        const button = document.getElementById('download-btn')
+        const shareBtn = document.getElementById('share-btn')
+
+        // Hide buttons temporarily
+        if (button) button.style.opacity = '0'
+        if (shareBtn) shareBtn.style.opacity = '0'
+
+        try {
+            const dataUrl = await toPng(storyRef.current, {
+                cacheBust: true,
+                backgroundColor: '#1a1a1a',
+                pixelRatio: 2
+            })
+
+            // Convert data URL to blob
+            const response = await fetch(dataUrl)
+            const blob = await response.blob()
+
+            return blob
+        } catch (err) {
+            console.error('Image generation failed:', err)
+            return null
+        } finally {
+            if (button) button.style.opacity = '1'
+            if (shareBtn) shareBtn.style.opacity = '1'
+        }
+    }
+
+    const handleDownload = async () => {
+        if (!storyRef.current) return
+
+        try {
+            const dataUrl = await toPng(storyRef.current, {
+                cacheBust: true,
+                backgroundColor: '#1a1a1a',
+                pixelRatio: 2
+            })
+
+            const link = document.createElement('a')
+            link.download = `git-wrapped-${data.login}.png`
+            link.href = dataUrl
+            link.click()
+
+            toast.success("Saved to your device!")
+        } catch (err) {
+            console.error('Download failed:', err)
+            toast.error("Failed to download")
+        }
+    }
+
+    const handleShare = async () => {
+        try {
+            const blob = await generateImage()
+            if (!blob) {
+                toast.error("Failed to generate image")
+                return
+            }
+
+            // Check if Web Share API is supported
+            if (navigator.share && navigator.canShare) {
+                const file = new File([blob], `git-wrapped-${data.login}.png`, { type: 'image/png' })
+
+                if (navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'My Git Wrapped',
+                        text: `Check out my Git Wrapped! 🚀 #GitWrapped`
+                    })
+                    toast.success("Shared successfully!")
+                } else {
+                    // Fallback: download the image
+                    fallbackDownload(blob)
+                }
+            } else {
+                // Fallback for desktop/unsupported browsers
+                fallbackDownload(blob)
+            }
+        } catch (err: any) {
+            // User cancelled or error occurred
+            if (err.name !== 'AbortError') {
+                console.error('Share failed:', err)
+                const blob = await generateImage()
+                if (blob) fallbackDownload(blob)
+            }
+        }
+    }
+
+    const fallbackDownload = (blob: Blob) => {
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.download = `git-wrapped-${data.login}.png`
+        link.href = url
+        link.click()
+        URL.revokeObjectURL(url)
+        toast.success("Image saved! Share it on Instagram from your photos.")
+    }
+
     return (
-        <div className="text-center space-y-8 px-4">
-            <TrendingUp size={60} className="mx-auto opacity-80" strokeWidth={1} />
-            <div>
-                <p className="text-2xl font-light tracking-tight mb-6">WHAT A YEAR</p>
-                <div className="space-y-2 text-sm font-mono opacity-70">
-                    <p>{data.totalCommits.toLocaleString()} commits</p>
-                    <p>{data.totalStars.toLocaleString()} stars</p>
-                    <p>{data.totalContributions.toLocaleString()} contributions</p>
-                    <p>{data.activeDays} days of code</p>
+        <div ref={storyRef} className="text-center px-4 bg-[#1a1a1a] rounded-lg w-full max-w-sm mx-auto py-4">
+            <div className='flex flex-col gap-2'>
+                <div className="flex flex-col gap-4 justify-between items-center mb-3">
+                    {/* Use standard img for html2canvas compatibility */}
+                    <img
+                        src={data.avatar_url}
+                        alt="Avatar"
+                        crossOrigin="anonymous"
+                        className="w-[50px] h-[50px] rounded-full object-cover"
+                    />
+
+                    <div className='flex flex-col gap-1'>
+                        <p className='font-mono'>{data.login}</p>
+                        <p className="text-xs font-mono uppercase opacity-60">Here's to another year of amazing code!</p>
+                    </div>
                 </div>
-                <p className="text-xl font-light mt-8 tracking-wider">KEEP CODING</p>
+
+                <div className="text-xs font-mono opacity-70 grid grid-cols-2 gap-3">
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg" style={{ animationDelay: '0.6s' }}>{data.totalCommits.toLocaleString()} commits</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg" style={{ animationDelay: '0.75s' }}>{data.totalStars.toLocaleString()} stars</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg" style={{ animationDelay: '0.9s' }}>{data.totalContributions.toLocaleString()} contributions</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg" style={{ animationDelay: '1.05s' }}>{data.activeDays} days</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg col-span-2 text-center" style={{ animationDelay: '1.2s' }}>Busiest: {formatDate(data.busiestDays[0].date)}</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg col-span-2 text-center" style={{ animationDelay: '1.35s' }}>Top Language: {data.topLanguages[0]}</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg" style={{ animationDelay: '1.5s' }}>Highest Streak: {data.longestStreak}d</div>
+                    <div className="animate-slide-in-stagger border border-white/20 p-3 rounded-lg" style={{ animationDelay: '1.65s' }}>Merged PRs: {data.pullRequestsMerged}</div>
+                </div>
+
+                <div className='flex items-center justify-center gap-3 mt-4'>
+                    <div
+                        id="download-btn"
+                        onClick={handleDownload}
+                        className='flex items-center justify-center gap-2 border border-white/20 px-4 py-3 rounded-lg hover:bg-white/5 transition-all cursor-pointer'
+                    >
+                        <Download size={16} className='opacity-80' />
+                        <p className='text-xs font-mono uppercase tracking-wider opacity-80'>Download</p>
+                    </div>
+
+                    <div
+                        id="share-btn"
+                        onClick={handleShare}
+                        className='flex items-center justify-center gap-2 border border-white/20 px-4 py-3 rounded-lg hover:bg-white/5 transition-all cursor-pointer'
+                    >
+                        <Instagram size={16} className='opacity-80' />
+                        <p className='text-xs font-mono uppercase tracking-wider opacity-80'>Share</p>
+                    </div>
+                </div>
             </div>
         </div>
     )
