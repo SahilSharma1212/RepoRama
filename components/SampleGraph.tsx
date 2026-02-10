@@ -14,7 +14,8 @@ export default function SampleGraph() {
             { id: 2, label: 'Docs' },
             { id: 3, label: 'Notes' },
             { id: 4, label: 'AI Summary' },
-            { id: 5, label: 'Issues' },
+            { id: 5, label: 'Github Wrapped' },
+            { id: 6, label: 'Repo Stats' },
         ]
 
         const edges = [
@@ -22,6 +23,7 @@ export default function SampleGraph() {
             { from: 1, to: 3 },
             { from: 1, to: 4 },
             { from: 1, to: 5 },
+            { from: 1, to: 6 },
         ]
 
         new Network(
@@ -60,7 +62,7 @@ export default function SampleGraph() {
         bg-black/40
         backdrop-blur-md
       bg-[radial-gradient(circle,rgba(255,255,255,0.15)_1px,transparent_1px)]
-      bg-[size:18px_18px]
+      bg-size-[18px_18px]
       "
         />
     )
