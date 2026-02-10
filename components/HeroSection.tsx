@@ -5,11 +5,6 @@ import { memo, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 
-const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-};
-
 const staggerContainer = {
     hidden: { opacity: 0 },
     visible: {
@@ -44,19 +39,19 @@ export default memo(function HeroSection() {
                     </h1>
                 </motion.div>
 
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className='flex items-center justify-center gap-4'>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className='flex items-center justify-center gap-4 max-md:flex-col'>
                     <Link
                         href="/dashboard"
-                        className='px-4 py-2 rounded-md bg-white text-black hover:bg-gray-200 transition-colors duration-300'
+                        className='px-4 py-2 rounded-md bg-white text-black hover:bg-gray-200 transition-colors duration-300 max-md:text-sm'
                     >
-                        Try out your first Repo -&gt;
+                        Try out yourself &rarr;
                     </Link>
 
                     <Link
                         href="/visualiser"
-                        className='px-4 py-2 rounded-md bg-white/10 text-white border border-white/30 hover:bg-white/20 transition-colors'
+                        className='px-4 py-2 rounded-md bg-white/10 text-white border border-white/30 hover:bg-white/20 transition-colors max-md:text-sm'
                     >
-                        Our Demo -&gt;
+                        Watch our Demo &rarr;
                     </Link>
                 </motion.div>
 
@@ -96,23 +91,22 @@ export default memo(function HeroSection() {
 
                 {/* STEP 1 LOGIN */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
-                    <p className='flex items-center gap-2 font-sans font-bold text-xl'> <ChevronRight size={24} /> Step 1: Login</p>
+                    <p className='flex items-center gap-2 font-sans font-bold text-xl max-md:text-lg'> <ChevronRight size={24} /> Step 1: Login</p>
 
-                    <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5'>
-                        <p><span className='bg-zinc-800 px-2 py-1'>Login</span>, and visit you personal <span className='bg-zinc-800 px-2 py-1'>Dashboard</span></p>
+                    <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 max-md:text-sm max-sm:text-xs'>
+                        <p><span className='bg-zinc-800 px-2 py-1 max-md:text-sm max-sm:text-xs'>Login</span>, and visit you personal <span className='bg-zinc-800 px-2 py-1 max-md:text-sm max-sm:text-xs'>Dashboard</span></p>
                     </div>
 
                 </motion.div>
 
                 {/* STEP 2 ADDING A REPO */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
-                    <p className='flex items-center gap-2 font-sans font-bold text-xl'> <ChevronRight size={24} /> Step 2: Adding a Repo</p>
+                    <p className='flex items-center gap-2 font-sans font-bold text-xl max-md:text-lg'> <ChevronRight size={24} /> Step 2: Adding a Repo</p>
 
-                    <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 flex flex-col items-start justify-start gap-4 pt-4'>
-                        <p>
-                            <span className='opacity-50 mx-2'>1 &gt;</span>
+                    <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 flex flex-col items-start justify-start gap-4 pt-4 max-md:text-sm max-sm:text-xs'>
+                        <p>1.
                             Click to the
-                            <span className='bg-zinc-800 px-2 mx-2 py-1'>Add a Repo</span>
+                            <span className='bg-zinc-800 px-2 mx-2 py-1 max-md:text-sm max-sm:text-xs'>Add a Repo</span>
                             button
                         </p>
 
@@ -121,9 +115,9 @@ export default memo(function HeroSection() {
                         </div>
 
                         <p>
-                            <span className='opacity-50 mx-2'>2 &gt;</span>
+                            2.
                             Add a valid
-                            <span className='bg-zinc-800 px-2 py-1 mx-2'>Repo URL</span>
+                            <span className='bg-zinc-800 px-2 py-1 mx-2 max-md:text-sm max-sm:text-xs'>Repo URL</span>
                         </p>
 
                         <div className='bg-white/5 flex-col flex items-start justify-start gap-2 px-5 py-5 text-white/50 rounded-md w-full'>
@@ -147,16 +141,16 @@ export default memo(function HeroSection() {
                             </div>
                         </div>
                         <p>
-                            <span className='opacity-50 mx-2'>3 &gt;</span>
+                            3.
                             This Adds your repository to your
-                            <span className='bg-zinc-800 px-2 mx-2 py-1'>Dashboard</span>
+                            <span className='bg-zinc-800 px-2 mx-2 py-1 max-md:text-sm max-sm:text-xs'>Dashboard</span>
                             for later
                         </p>
 
                         <p>
-                            <span className='opacity-50 mx-2'>4 &gt;</span>
+                            4.
                             You can see you
-                            <span className='bg-zinc-800 px-2 mx-2 py-1'>Repo stats</span>
+                            <span className='bg-zinc-800 px-2 mx-2 py-1 max-md:text-sm max-sm:text-xs'>Repo stats</span>
                             here.
                         </p>
                     </div>
@@ -166,10 +160,10 @@ export default memo(function HeroSection() {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     <p className='flex items-center gap-2 font-sans font-bold text-xl'> <ChevronRight size={24} /> Step 3: Visualiser Playground </p>
 
-                    <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 flex flex-col items-start justify-start gap-4 pt-4'>
+                    <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 flex flex-col items-start justify-start gap-4 pt-4 max-md:text-sm max-sm:text-xs'>
                         <p>
                             Visit the
-                            <span className='bg-zinc-800 px-2 mx-2 py-1'>Visualiser Playground</span>
+                            <Link href="/visualiser" className='bg-zinc-800 px-2 mx-2 py-1 max-md:text-sm max-sm:text-xs'>Visualiser Playground</Link>
                             section.
                         </p>
 
@@ -196,14 +190,14 @@ export default memo(function HeroSection() {
                 {/* AI CODE SUMMARISATION */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     {/* Title */}
-                    <p className="flex items-center gap-2 font-sans font-bold text-xl">
-                        <ChevronRight size={24} />
+                    <p className="flex items-center gap-2 font-sans font-bold text-xl max-md:text-sm max-sm:text-xs">
+                        &gt;
                         AI Code Summarisation
                     </p>
 
                     {/* Code Block */}
-                    <div className="relative w-full mt-5">
-                        <div className="p-3 rounded-md bg-zinc-900 text-sm font-mono w-full overflow-x-auto">
+                    <div className="relative w-full mt-5 overflow-auto custom-scrollbar">
+                        <div className="p-3 rounded-md bg-zinc-900 text-sm font-mono w-full overflow-x-auto max-md:text-sm max-sm:text-xs">
                             <div className="min-w-max whitespace-nowrap space-y-1">
                                 <div className="p-3 rounded-md bg-blue-900/10 space-y-1">
 
@@ -327,12 +321,12 @@ export default memo(function HeroSection() {
 
                 {/* GITHUB WRAPPED */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
-                    <p className="flex items-center gap-2 font-sans font-bold text-xl">
+                    <p className="flex items-center gap-2 font-sans font-bold text-xl max-md:text-sm max-sm:text-xs">
                         <ChevronRight size={24} />
                         Github Wrapped
                     </p>
                     <div className="relative w-full mt-5">
-                        <div className="p-3 rounded-md bg-zinc-900 text-sm font-mono w-full overflow-x-auto flex items-center justify-start gap-4">
+                        <div className="p-3 rounded-md bg-zinc-900 text-sm font-mono w-full overflow-x-auto flex items-center justify-start gap-4 max-md:text-sm max-sm:text-xs">
                             <p className="text-white/80 w-fit">Get Your Github Wrapped With Just One click</p>
                             <Link href="/git-wrap" className="text-black bg-white w-fit px-2 py-1 rounded-md cursor-pointer">Try-Out</Link>
                         </div>
@@ -342,12 +336,12 @@ export default memo(function HeroSection() {
 
                 {/* AI DOCUMENTATION */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
-                    <p className="flex items-center gap-2 font-sans font-bold text-xl">
+                    <p className="flex items-center gap-2 font-sans font-bold text-xl max-md:text-sm max-sm:text-xs">
                         <ChevronRight size={24} />
                         AI Documentation
                     </p>
                     <div className="relative w-full mt-5">
-                        <div className="p-3 rounded-md bg-zinc-900 text-sm font-mono w-full overflow-x-auto">
+                        <div className="p-3 rounded-md bg-zinc-900 text-sm font-mono w-full overflow-x-auto max-md:text-sm max-sm:text-xs">
                             COMMING SOON!
                         </div>
                     </div>

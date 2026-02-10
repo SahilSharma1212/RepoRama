@@ -30,7 +30,7 @@ export default function Navbar() {
             </div>
 
             {/* Center Links */}
-            <div className="flex justify-start md:justify-center gap-6 text-sm font-medium">
+            <div className="flex justify-start md:justify-center gap-6 text-sm font-medium max-md:gap-3 max-sm:gap-1">
                 <Link
                     href="/"
                     className="hover:text-gray-300 hover:bg-white/10 p-1 px-3 rounded-full transition"
