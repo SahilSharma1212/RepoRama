@@ -1,29 +1,50 @@
 'use client'
 import { ChevronRight, Notebook, NotebookPen, Plus, TvMinimalPlay, WandSparkles } from 'lucide-react';
 import SampleGraph from './SampleGraph';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'motion/react';
 
-export default function HeroSection() {
+const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2
+        }
+    }
+};
+
+export default memo(function HeroSection() {
     const [showSummary, setShowSummary] = useState(false);
     return (
-        <div className="relative w-full  flex items-center justify-center flex-col overflow-hidden font-mono pb-20">
+        <div className="relative w-full flex items-center justify-center flex-col overflow-hidden font-mono pb-20">
 
             {/* Soft glow effect for background depth */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#22222205] rounded-full blur-[120px] pointer-events-none" />
 
             {/* MAIN HERO SECTION */}
-            <main className="relative z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-30">
+            <motion.main
+                initial="hidden"
+                animate="visible"
+                variants={staggerContainer}
+                className="relative z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-30"
+            >
 
-                <div className="space-y-4 mb-12">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="space-y-4 mb-12">
                     <p className="text-sm uppercase tracking-[0.3em] text-zinc-500 text-center font-mono">Platform Overview</p>
                     <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
                         Your one-stop solution for all
                         <span className="block mt-2 text-zinc-400 w-fit mx-auto bg-linear-to-br from-white/5 to-gray-400/5 ">GitHub Repositories</span>
                     </h1>
-                </div>
+                </motion.div>
 
-                <div className='flex items-center justify-center gap-4'>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className='flex items-center justify-center gap-4'>
                     <Link
                         href="/dashboard"
                         className='px-4 py-2 rounded-md bg-white text-black hover:bg-gray-200 transition-colors duration-300'
@@ -37,42 +58,54 @@ export default function HeroSection() {
                     >
                         Our Demo -&gt;
                     </Link>
-                </div>
+                </motion.div>
 
 
-            </main>
+            </motion.main>
 
             {/* WHAT WE ACTUALLY PROVIDE */}
-            <section className='z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-10'>
-                <h1 className="text-2xl md:text-5xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
+            <motion.section
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={staggerContainer}
+                className='z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-10'
+            >
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-2xl md:text-5xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
                     What We Actually Provide
-                </h1>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+                </motion.h1>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
                     <FeatureCard icon={<Notebook size={24} />} title="AI Documentation" />
                     <FeatureCard icon={<NotebookPen size={24} />} title="Notes" />
                     <FeatureCard icon={<WandSparkles size={24} />} title="AI Summaries" />
                     <FeatureCard icon={<TvMinimalPlay size={24} />} title="GitHub Wrap" />
-                </div>
-            </section>
+                </motion.div>
+            </motion.section>
 
             {/* HOW TO START */}
-            <section className='z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-10'>
-                <h1 className="text-2xl md:text-5xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
+            <motion.section
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={staggerContainer}
+                className='z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-10'
+            >
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-2xl md:text-5xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
                     How to start
-                </h1>
+                </motion.h1>
 
                 {/* STEP 1 LOGIN */}
-                <div className="mt-10">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     <p className='flex items-center gap-2 font-sans font-bold text-xl'> <ChevronRight size={24} /> Step 1: Login</p>
 
                     <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5'>
                         <p><span className='bg-zinc-800 px-2 py-1'>Login</span>, and visit you personal <span className='bg-zinc-800 px-2 py-1'>Dashboard</span></p>
                     </div>
 
-                </div>
+                </motion.div>
 
                 {/* STEP 2 ADDING A REPO */}
-                <div className="mt-10">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     <p className='flex items-center gap-2 font-sans font-bold text-xl'> <ChevronRight size={24} /> Step 2: Adding a Repo</p>
 
                     <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 flex flex-col items-start justify-start gap-4 pt-4'>
@@ -127,10 +160,10 @@ export default function HeroSection() {
                             here.
                         </p>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* STEP 3 STATS */}
-                <div className="mt-10">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     <p className='flex items-center gap-2 font-sans font-bold text-xl'> <ChevronRight size={24} /> Step 3: Visualiser Playground </p>
 
                     <div className='p-3 bg-zinc-900/50 rounded-md border border-white/5 mt-5 flex flex-col items-start justify-start gap-4 pt-4'>
@@ -145,17 +178,23 @@ export default function HeroSection() {
 
 
                     </div>
-                </div>
-            </section>
+                </motion.div>
+            </motion.section>
 
             {/* FEATURES */}
-            <section className='z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-10'>
-                <h1 className="text-2xl md:text-5xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
+            <motion.section
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={staggerContainer}
+                className='z-10 w-[95%] max-w-5xl px-8 py-16 border border-white/10 backdrop-blur-xl bg-white/1 text-white rounded-3xl shadow-2xl mt-10'
+            >
+                <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="text-2xl md:text-5xl font-bold tracking-tight text-center max-w-3xl mx-auto leading-tight">
                     Features
-                </h1>
+                </motion.h1>
 
                 {/* AI CODE SUMMARISATION */}
-                <div className="mt-10">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     {/* Title */}
                     <p className="flex items-center gap-2 font-sans font-bold text-xl">
                         <ChevronRight size={24} />
@@ -284,10 +323,10 @@ export default function HeroSection() {
                             </div>
                         )}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* GITHUB WRAPPED */}
-                <div className="mt-10">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     <p className="flex items-center gap-2 font-sans font-bold text-xl">
                         <ChevronRight size={24} />
                         Github Wrapped
@@ -298,11 +337,11 @@ export default function HeroSection() {
                             <Link href="/git-wrap" className="text-black bg-white w-fit px-2 py-1 rounded-md cursor-pointer">Try-Out</Link>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
 
                 {/* AI DOCUMENTATION */}
-                <div className="mt-10">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="mt-10">
                     <p className="flex items-center gap-2 font-sans font-bold text-xl">
                         <ChevronRight size={24} />
                         AI Documentation
@@ -312,21 +351,21 @@ export default function HeroSection() {
                             COMMING SOON!
                         </div>
                     </div>
-                </div>
-            </section >
+                </motion.div>
+            </motion.section >
         </div >
     );
-}
+});
 
 function FeatureCard({ icon, title }: { icon: React.ReactNode, title: string }) {
     return (
-        <div className="group relative flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border border-white/5 bg-zinc-900/50 hover:bg-zinc-800/50 hover:border-white/20 transition-all duration-300 ease-out cursor-default">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="group relative flex flex-col items-center justify-center gap-4 p-8 rounded-2xl border border-white/5 bg-zinc-900/50 hover:bg-zinc-800/50 hover:border-white/20 transition-all duration-300 ease-out cursor-default">
             <div className="text-zinc-400 group-hover:text-white transition-colors duration-300">
                 {icon}
             </div>
             <span className="text-xs text-center font-mono tracking-wider text-zinc-500 group-hover:text-zinc-200 transition-colors duration-300 uppercase">
                 {title}
             </span>
-        </div>
+        </motion.div>
     );
 }

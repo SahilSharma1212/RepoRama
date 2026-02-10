@@ -38,12 +38,6 @@ export default function Navbar() {
                     Home
                 </Link>
                 <Link
-                    href="/visualiser"
-                    className="hover:text-gray-300 hover:bg-white/10 p-1 px-3 rounded-full transition max-md:hidden"
-                >
-                    Demo
-                </Link>
-                <Link
                     href="/dashboard"
                     className="hover:text-gray-300 hover:bg-white/10 p-1 px-3 rounded-full transition"
                 >

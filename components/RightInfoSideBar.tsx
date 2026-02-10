@@ -223,7 +223,16 @@ export default function RightInfoSideBar() {
                                                 Please sign in to use AI code summarisation.
                                             </p>
                                         </div>
-                                        <Link className="bg-white text-black p-2 px-6 rounded hover:bg-white/80 transition-colors flex items-center gap-2 font-semibold" href="/sign-in">Sign In</Link>
+
+                                        <div className=" w-full p-6 rounded-xl border border-white/10 bg-zinc-900/40 text-center text-gray-400">
+                                            <p className="text-sm">
+                                                If Signed in already, use your own repos to generate summaries.
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Link className="bg-white text-black p-2 px-6 rounded hover:bg-white/80 transition-colors flex items-center gap-2 font-semibold" href="/sign-in">Sign In</Link>
+                                            <Link className="bg-white text-black p-2 px-6 rounded hover:bg-white/80 transition-colors flex items-center gap-2 font-semibold" href="/dashboard">Dashboard</Link>
+                                        </div>
                                     </section>
                                 ) : (
                                     /* REAL SUMMARY UI (only when NOT /visualiser) */
