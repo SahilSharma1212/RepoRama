@@ -226,22 +226,6 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* Navigation Buttons */}
-                    <button
-                        onClick={prevStory}
-                        disabled={currentStoryIndex === 0}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 z-40 bg-black/30 backdrop-blur-sm rounded-lg p-2 disabled:opacity-20 hover:bg-black/50 transition border border-neutral-700"
-                    >
-                        <ChevronLeft size={20} className="text-white" />
-                    </button>
-                    <button
-                        onClick={nextStory}
-                        disabled={currentStoryIndex === stories.length - 1}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 z-40 bg-black/30 backdrop-blur-sm rounded-none p-2 disabled:opacity-20 hover:bg-black/50 transition border border-neutral-700"
-                    >
-                        <ChevronRight size={20} className="text-white" />
-                    </button>
-
                     {/* Tap Areas for Mobile */}
                     <div
                         className="absolute left-0 top-0 bottom-0 w-1/3 z-30 cursor-pointer"
@@ -529,7 +513,7 @@ function FinaleStory({ data }: { data: GitWrappedData }) {
 
                     <div className='flex flex-col gap-1'>
                         <p className='font-mono'>{data.login}</p>
-                        <p className="text-xs font-mono uppercase opacity-60">Here's to another year of amazing code!</p>
+                        <p className="text-xs font-mono uppercase opacity-60">Keep coding dawg !</p>
                     </div>
                 </div>
 
