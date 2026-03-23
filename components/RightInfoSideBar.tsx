@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDataStore } from '@/app/store/dataStore';
-import { X, Folder, File, Wand2, Code, Plus, Ban, Info, WandSparkles } from 'lucide-react';
+import { X, Folder, File, Wand2, Code, Plus, Ban, Info, WandSparkles, AlignLeft, Zap, Settings, Braces, Lightbulb } from 'lucide-react';
 import useUIStore from '../app/store/uiStore';
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -17,7 +17,7 @@ import Link from 'next/link';
 export default function RightInfoSideBar() {
 
     const pathname = usePathname();
-    const { selectedNode, setSelectedNode } = useDataStore();
+    const { selectedNode, setSelectedNode, repoStats } = useDataStore();
     const { isRightBarHidden, toggleRightBarVisibility } = useUIStore();
     const [activeTab, setActiveTab] = useState<'code' | 'summary' | 'notes'>('code');
 
@@ -99,6 +99,20 @@ export default function RightInfoSideBar() {
 
     }
 
+
+    const renderHighlightedText = (text: string) => {
+        // Regex to match technical keywords, camelCase, PascalCase, and words with underscores
+        const parts = text.split(/(\b(?:[a-z]+[A-Z][a-z\d]*|[A-Z][a-z\d]+[A-Z][a-z\d]*|[a-z\d]*_[a-z\d_]*|[A-Z]{2,}|component|function|hook|state|effect|API|endpoint|database|schema|UI|UX|CSS|HTML|Javascript|Typescript|React|Zustand|Clerk|Supabase)\b)/g);
+        
+        return parts.map((part, i) => {
+            const isKeyword = /(\b(?:[a-z]+[A-Z][a-z\d]*|[A-Z][a-z\d]+[A-Z][a-z\d]*|[a-z\d]*_[a-z\d_]*|[A-Z]{2,}|component|function|hook|state|effect|API|endpoint|database|schema|UI|UX|CSS|HTML|Javascript|Typescript|React|Zustand|Clerk|Supabase)\b)/.test(part);
+            return isKeyword ? (
+                <span key={i} className="text-white font-medium bg-white/10 px-1 py-0.5 rounded-none border-b border-white/20">
+                    {part}
+                </span>
+            ) : part;
+        });
+    };
 
     return (
         <div className={`
@@ -265,60 +279,85 @@ export default function RightInfoSideBar() {
 
                                         {/* Summary Content */}
                                         {summary && (
-                                            <section className="mt-3 flex flex-col w-full p-3 gap-3">
-                                                <h2 className="font-semibold">Description</h2>
-
-                                                <div className="bg-[#111] p-3 rounded-md">
-                                                    {summary.description.map((desc, index) => (
-                                                        <div className="flex items-center gap-2" key={index}>
-                                                            <div className="w-1 h-1 rounded-full bg-gray-300" />
-                                                            <p className="text-sm text-gray-300">{desc}</p>
-                                                        </div>
-                                                    ))}
+                                            <section className="mt-5 space-y-6">
+                                                {/* Description Section */}
+                                                <div className="group border-l-2 border-blue-500 bg-white/5 p-4 rounded-none transition-all hover:bg-white/10">
+                                                    <div className="flex items-center gap-2 mb-3 text-blue-400">
+                                                        <AlignLeft size={18} />
+                                                        <h2 className="text-sm font-bold uppercase tracking-wider">Description</h2>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        {summary.description.map((desc, index) => (
+                                                            <p key={index} className="text-sm text-gray-300 leading-relaxed">
+                                                                {renderHighlightedText(desc)}
+                                                            </p>
+                                                        ))}
+                                                    </div>
                                                 </div>
 
-                                                <h2 className="font-semibold">Key Features</h2>
-
-                                                <div className="bg-[#111] p-3 rounded-md">
-                                                    {summary.keyFeatures.map((feature, index) => (
-                                                        <div className="flex items-center gap-2" key={index}>
-                                                            <div className="w-1 h-1 rounded-full bg-gray-300" />
-                                                            <p className="text-sm text-gray-300">{feature}</p>
-                                                        </div>
-                                                    ))}
+                                                {/* Key Features Section */}
+                                                <div className="group border-l-2 border-emerald-500 bg-white/5 p-4 rounded-none transition-all hover:bg-white/10">
+                                                    <div className="flex items-center gap-2 mb-3 text-emerald-400">
+                                                        <Zap size={18} />
+                                                        <h2 className="text-sm font-bold uppercase tracking-wider">Key Features</h2>
+                                                    </div>
+                                                    <div className="grid grid-cols-1 gap-2">
+                                                        {summary.keyFeatures.map((feature, index) => (
+                                                            <div key={index} className="flex items-start gap-2 group/item">
+                                                                <div className="mt-1.5 w-1.5 h-1.5 rounded-none bg-emerald-500/50 group-hover/item:bg-emerald-400 transition-colors" />
+                                                                <p className="text-sm text-gray-300">{renderHighlightedText(feature)}</p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
 
-                                                <h2 className="font-semibold">Implementation Details</h2>
-
-                                                <div className="bg-[#111] p-3 rounded-md">
-                                                    {summary.implementationDetails.map((detail, index) => (
-                                                        <div className="flex items-center gap-2" key={index}>
-                                                            <div className="w-1 h-1 rounded-full bg-gray-300" />
-                                                            <p className="text-sm text-gray-300">{detail}</p>
-                                                        </div>
-                                                    ))}
+                                                {/* Implementation Details Section */}
+                                                <div className="group border-l-2 border-amber-500 bg-white/5 p-4 rounded-none transition-all hover:bg-white/10">
+                                                    <div className="flex items-center gap-2 mb-3 text-amber-400">
+                                                        <Settings size={18} />
+                                                        <h2 className="text-sm font-bold uppercase tracking-wider">Implementation</h2>
+                                                    </div>
+                                                    <div className="space-y-3">
+                                                        {summary.implementationDetails.map((detail, index) => (
+                                                            <p key={index} className="text-sm text-gray-300 border-b border-white/5 pb-2 last:border-0 last:pb-0 underline-offset-4 decoration-amber-500/20">
+                                                                {renderHighlightedText(detail)}
+                                                            </p>
+                                                        ))}
+                                                    </div>
                                                 </div>
 
-                                                <div className="bg-[#111] p-3 rounded-md">
-                                                    <h2 className="font-semibold mb-2">Functions Used</h2>
-                                                    {summary.importantFunctionsUsed.map((func, index) => (
-                                                        <p
-                                                            key={index}
-                                                            className="text-xs bg-[#222] p-1 pl-3 rounded-md font-mono"
-                                                        >
-                                                            {func}
-                                                        </p>
-                                                    ))}
+                                                {/* Functions Used Section */}
+                                                <div className="group border-l-2 border-indigo-500 bg-white/5 p-4 rounded-none transition-all hover:bg-white/10">
+                                                    <div className="flex items-center gap-2 mb-3 text-indigo-400">
+                                                        <Braces size={18} />
+                                                        <h2 className="text-sm font-bold uppercase tracking-wider">Important Functions</h2>
+                                                    </div>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {summary.importantFunctionsUsed.map((func, index) => (
+                                                            <code
+                                                                key={index}
+                                                                className="text-[10px] bg-indigo-500/10 text-indigo-300 px-2 py-1 rounded-none border border-indigo-500/20 font-mono"
+                                                            >
+                                                                {func}
+                                                            </code>
+                                                        ))}
+                                                    </div>
                                                 </div>
 
-                                                <div className="bg-[#111] p-3 rounded-md">
-                                                    <h2 className="font-semibold mb-2">Use Cases</h2>
-                                                    {summary.useCases.map((useCase, index) => (
-                                                        <div className="flex items-center gap-2" key={index}>
-                                                            <div className="w-1 h-1 rounded-full bg-gray-300" />
-                                                            <p className="text-sm text-gray-300">{useCase}</p>
-                                                        </div>
-                                                    ))}
+                                                {/* Use Cases Section */}
+                                                <div className="group border-l-2 border-rose-500 bg-white/5 p-4 rounded-none transition-all hover:bg-white/10">
+                                                    <div className="flex items-center gap-2 mb-3 text-rose-400">
+                                                        <Lightbulb size={18} />
+                                                        <h2 className="text-sm font-bold uppercase tracking-wider">Use Cases</h2>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        {summary.useCases.map((useCase, index) => (
+                                                            <div key={index} className="flex items-center gap-3 bg-white/5 p-2 rounded-none border border-white/5">
+                                                                <div className="w-1 h-1 rounded-none bg-rose-500" />
+                                                                <p className="text-sm text-gray-400 italic">"{useCase}"</p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </section>
                                         )}
@@ -327,7 +366,9 @@ export default function RightInfoSideBar() {
                             </div>
                         )}
 
-
+                        {activeTab === 'notes' && selectedNode && (
+                            <Notes selectedNode={selectedNode} repoId={repoStats?.full_name || ''} />
+                        )}
                     </>
                 )}
 
@@ -365,11 +406,11 @@ export default function RightInfoSideBar() {
                     onClick={() => setActiveTab('summary')}
                     className={`flex-1 py-3 text-sm font-medium transition
         ${activeTab === 'summary'
-                            ? 'text-white border-b-2 border-purple-500'
+                            ? 'text-white border-b-2 border-fuchsia-500 bg-fuchsia-500/5'
                             : 'text-gray-400 hover:text-gray-300'}`}
                 >
                     <div className="flex justify-center items-center gap-2">
-                        <Wand2 size={16} /> Summary
+                        <Wand2 size={16} className={activeTab === 'summary' ? 'text-fuchsia-400' : ''} /> Summary
                     </div>
                 </button>
 

@@ -6,6 +6,29 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
+import GithubContributionCalendar from '@/components/GithubContributionCalendar'
+import CommitTimeOfDayHeatmap from '@/components/CommitTimeOfDayHeatmap'
+import Link from 'next/link'
+
+type CalendarDay = {
+    date: string;
+    count: number;
+    weekday: number;
+    weekIndex: number;
+};
+
+type HourlyBucket = {
+    hour: number;
+    count: number;
+};
+
+type ContributionsResponse = {
+    login: string;
+    from: string;
+    to: string;
+    calendarDays: CalendarDay[];
+    hourlyHistogram: HourlyBucket[];
+};
 
 export default function LinkGithubPage() {
     const { userId } = useAuth()
@@ -13,9 +36,40 @@ export default function LinkGithubPage() {
     const [githubUsername, setGithubUsername] = useState('')
     const [isLinkingGithub, setIsLinkingGithub] = useState(false)
 
+    const [contribData, setContribData] = useState<ContributionsResponse | null>(null)
+    const [isLoadingContrib, setIsLoadingContrib] = useState(false)
+    const [contribError, setContribError] = useState<string | null>(null)
+
     useEffect(() => {
         if (userId) fetchUser(userId)
     }, [userId, fetchUser])
+
+    useEffect(() => {
+        const fetchContributions = async () => {
+            if (!user || !user.login) return
+            setIsLoadingContrib(true)
+            setContribError(null)
+            try {
+                const res = await fetch(`/api/github/contributions?login=${encodeURIComponent(user.login)}`)
+                if (!res.ok) {
+                    const data = await res.json().catch(() => null)
+                    const message = data?.error || 'Failed to load contribution data'
+                    setContribError(message)
+                    return
+                }
+                const data = (await res.json()) as ContributionsResponse
+                setContribData(data)
+            } catch (err) {
+                console.error(err)
+                setContribError('Something went wrong while loading contributions.')
+            } finally {
+                setIsLoadingContrib(false)
+            }
+        }
+
+        fetchContributions()
+    }, [user])
+
     const extractGithubUsername = (url: string) => {
         try {
             const parsed = new URL(url)
@@ -56,8 +110,16 @@ export default function LinkGithubPage() {
     }
 
     return (
-        <div className="py-10 flex items-center justify-center p-4">
-            <div className="max-w-2xl w-full bg-[#1a1a1a] rounded-xl p-6 border border-white/5 shadow-xl">
+        <div className="h-fit w-full flex flex-col items-center justify-start">
+            <div className="w-full max-w-6xl p-8 border-x border-white/5 min-h-screen">
+                <div className="mb-6">
+                    <Link
+                        href="/dashboard"
+                        className="text-sm text-gray-500 hover:text-white flex items-center gap-2 transition-colors"
+                    >
+                        <span className='bg-neutral-800 p-2'>← Back to Dashboard</span>
+                    </Link>
+                </div>
                 {user && user.login ? (
                     <>
                         <div className="flex items-center gap-4 mb-6">
@@ -67,15 +129,20 @@ export default function LinkGithubPage() {
                                     alt={user.login}
                                     width={80}
                                     height={80}
-                                    className="rounded-full border border-white/20"
+                                    className="rounded-none border border-white/20"
                                 />
                             )}
-                            <h2 className="text-2xl font-bold text-white">
-                                GitHub Account Linked
-                            </h2>
+                            <div>
+                                <h2 className="text-2xl font-bold text-white">
+                                    GitHub Account Linked
+                                </h2>
+                                <p className="text-sm text-gray-400">
+                                    Visualising your contribution activity over time.
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-300">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-gray-300">
                             <div>
                                 <span className="font-semibold text-gray-400 block">Login</span>
                                 {user.login}
@@ -140,7 +207,6 @@ export default function LinkGithubPage() {
                             )}
                         </div>
 
-                        {/* Stats */}
                         <div className="grid grid-cols-3 gap-4 mt-6 text-center text-white">
                             {user.public_repos != null && (
                                 <div>
@@ -161,20 +227,71 @@ export default function LinkGithubPage() {
                                 </div>
                             )}
                         </div>
+
+                        <div className="mt-8 space-y-6">
+                            <div>
+                                <div className="flex items-baseline justify-between mb-3">
+                                    <h3 className="text-lg font-semibold text-white">
+                                        Contributions
+                                    </h3>
+                                    {contribData && (
+                                        <p className="text-xs text-gray-500">
+                                            Last year ({new Date(contribData.from).toLocaleDateString()} -{" "}
+                                            {new Date(contribData.to).toLocaleDateString()})
+                                        </p>
+                                    )}
+                                </div>
+
+                                {isLoadingContrib && (
+                                    <div className="animate-pulse h-24 w-full rounded-none bg-white/5" />
+                                )}
+
+                                {contribError && (
+                                    <div className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+                                        {contribError}
+                                    </div>
+                                )}
+
+                                {!isLoadingContrib && !contribError && contribData && (
+                                    <div className="overflow-x-auto">
+                                        <GithubContributionCalendar calendarDays={contribData.calendarDays} />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <div className="flex items-baseline justify-between mb-3">
+                                    <h3 className="text-lg font-semibold text-white">
+                                        Commit activity by time of day
+                                    </h3>
+                                    <p className="text-xs text-gray-500">
+                                        Based on recent commit timestamps
+                                    </p>
+                                </div>
+
+                                {isLoadingContrib && (
+                                    <div className="animate-pulse h-16 w-full rounded-none bg-white/5" />
+                                )}
+
+                                {!isLoadingContrib && !contribError && contribData && (
+                                    <CommitTimeOfDayHeatmap hourlyHistogram={contribData.hourlyHistogram} />
+                                )}
+                            </div>
+                        </div>
                     </>
                 ) : (
                     <>
                         <div className="animate-pulse space-y-8">
                             <div className="flex items-center gap-4">
-                                <div className="w-20 h-20 bg-white/10 rounded-full" />
-                                <div className="h-8 w-48 bg-white/10 rounded-md" />
+                                <div className="w-20 h-20 bg-white/10 rounded-none" />
+                                <div className="h-8 w-48 bg-white/10 rounded-none" />
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 {[...Array(6)].map((_, i) => (
                                     <div key={i} className="space-y-2">
-                                        <div className="h-4 w-16 bg-white/5 rounded" />
-                                        <div className="h-5 w-32 bg-white/10 rounded" />
+                                        <div className="h-4 w-16 bg-white/5 rounded-none" />
+                                        <div className="h-5 w-32 bg-white/10 rounded-none" />
                                     </div>
                                 ))}
                             </div>
@@ -182,8 +299,8 @@ export default function LinkGithubPage() {
                             <div className="grid grid-cols-3 gap-4 pt-4">
                                 {[...Array(3)].map((_, i) => (
                                     <div key={i} className="flex flex-col items-center space-y-2">
-                                        <div className="h-8 w-12 bg-white/10 rounded" />
-                                        <div className="h-4 w-20 bg-white/5 rounded" />
+                                        <div className="h-8 w-12 bg-white/10 rounded-none" />
+                                        <div className="h-4 w-20 bg-white/5 rounded-none" />
                                     </div>
                                 ))}
                             </div>
@@ -194,3 +311,4 @@ export default function LinkGithubPage() {
         </div>
     )
 }
+
